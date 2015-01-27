@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Leap;
 
-public class OnClickMesh : MonoBehaviour {
+public class DrawMesh : MonoBehaviour {
 	Mesh mesh;
 	Material mat;
 	List<Vector3> Points;
