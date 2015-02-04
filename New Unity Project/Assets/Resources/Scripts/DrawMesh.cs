@@ -8,6 +8,8 @@ public class DrawMesh : MonoBehaviour {
 	Material mat;
 	List<Vector3> Points;
 	List<Vector3> Verts;
+	List<Vector3> Edge1;
+	List<Vector3> Edge2;
 	List<int> Tris;
 
 	Hand rightHand;
@@ -99,13 +101,13 @@ public class DrawMesh : MonoBehaviour {
 			float signY = Mathf.Sign(Vector3.Dot(new Vector3(0,1,0),Vector3.Cross(new Vector3(lastPinchSpot.x,0,lastPinchSpot.z), new Vector3(pinchSpot.x,0,pinchSpot.z))));
 
 			if(signZ < 0){
-				signZ = 360-signZ;
+				angleAroundZ = 360-angleAroundZ;
 			}
 			if(signX < 0){
-				signX = 360-signX;
+				angleAroundX = 360-angleAroundX;
 			}
 			if(signY < 0){
-				signY = 360-signY;
+				angleAroundY = 360-angleAroundY;
 			}
 
 	
@@ -129,10 +131,13 @@ public class DrawMesh : MonoBehaviour {
 			if(drawnShape == null){
 				NewShape(handController.transform.TransformPoint(index.TipPosition.ToUnityScaled()));
 			}
-
+			
 			Points.Add (drawnShape.transform.InverseTransformPoint(handController.transform.TransformPoint(index.JointPosition(Finger.FingerJoint.JOINT_TIP).ToUnityScaled())));
 			Points.Add (drawnShape.transform.InverseTransformPoint(handController.transform.TransformPoint(index.JointPosition(Finger.FingerJoint.JOINT_PIP).ToUnityScaled())));
 			Points.Add (drawnShape.transform.InverseTransformPoint(handController.transform.TransformPoint(index.JointPosition(Finger.FingerJoint.JOINT_MCP).ToUnityScaled())));
+			Edge1.Add (Points [Points.length - 3]);
+			Edge2.Add (Points [Points.length-1]);
+
 			UpdateMesh();
 
 		
@@ -174,6 +179,29 @@ public class DrawMesh : MonoBehaviour {
 		//drawnShape.rigidbody.constraints = RigidbodyConstraints.FreezeAll;
 		//drawnShape.rigidbody.angularDrag = ANGULAR_DRAG; 
 		drawnShape.collider.isTrigger = true;
+
+	}
+
+	IEnumerator FillMesh(){
+		//connect ends
+		Tris.Add (Edge1[0]);Tris.Add (Edge2[0]);Tris.Add (Edge2[Edge2.Count]);
+		Tris.Add (Edge2[Edge2.Count]); Tris.Add (Edge1[Edge1.Count]);Tris.Add (Edge1[0]);
+
+		//add triangles for edge1
+		for(int i = 0; i<Edge1.Count-4; i++){
+			Tris.Add(Edge1[i]); Tris.Add(Edge1[i+2]); Tris.Add(Edge1[i+4]);
+		}
+		Tris.Add (Edge1[Edge1.Count-3]); Tris.Add (Edge1[Edge1.Count-1]);Tris.Add (Edge1[1]);
+		Tris.Add (Edge1[Edge1.Count-2]); Tris.Add (Edge1[0]);Tris.Add (Edge1[2]);
+
+		//add triangles for edge2
+		for(int i = 0; i<Edge2.Count-4; i++){
+			Tris.Add(Edge2[i]); Tris.Add(Edge2[i+2]); Tris.Add(Edge2[i+4]);
+		}
+		Tris.Add (Edge2[Edge2.Count-3]); Tris.Add (Edge2[Edge2.Count-1]);Tris.Add (Edge2[1]);
+		Tris.Add (Edge2[Edge2.Count-2]); Tris.Add (Edge2[0]);Tris.Add (Edge2[2]);
+
+
 
 	}
 
