@@ -8,8 +8,7 @@ public class DrawMesh : MonoBehaviour {
 	Material mat;
 	List<Vector3> Points;
 	List<Vector3> Verts;
-	List<Vector3> Edge1;
-	List<Vector3> Edge2;
+
 	List<int> Tris;
 
 	Hand rightHand;
@@ -20,7 +19,7 @@ public class DrawMesh : MonoBehaviour {
 	public GameObject prefabShape;
 	GameObject drawnShape; 
 
-	Vector3 lastPinchSpot;
+	Vector3 lastMovePinchSpot, lastRotatePinchSpot;
 
 
 	//float ANGULAR_DRAG = 10; //drag when spinning shape
@@ -30,12 +29,11 @@ public class DrawMesh : MonoBehaviour {
 		
 
 	void Start () {
-
 		Points = new List<Vector3>();
 		Verts = new List<Vector3>();
 		Tris = new List<int> ();
 
-		//ClearShape ();
+
 	}
 
 	void NewShape(Vector3 position){
@@ -51,54 +49,77 @@ public class DrawMesh : MonoBehaviour {
 	}
 
 
-	void Update () {
-		//Start new shape
-		if (Input.GetKeyDown (KeyCode.N)) {
-			drawnShape = null;
-		}
-
+	void LateUpdate () {
 		//get hands 
 		rightHand = handController.GetFrame().Hands.Rightmost;	
 		//rightRigid = handController.GetAllPhysicsHands ()[0];
 		leftHand = handController.GetFrame ().Hands.Leftmost;
+		Hand temp = null;
 		if (!rightHand.IsRight) {
+			temp = rightHand;
 			rightHand = null;
+
 		} 
 		if (!leftHand.IsLeft) {
+			rightHand = leftHand;
+			if( temp!=null){
+				leftHand = temp;
+			}else{
 				leftHand = null;
+			}
 		} 
 
 		// if there is a right hand and we're confident of its state
-		if(rightHand != null && rightHand.Confidence > CONFIDENCE_TO_DRAW){
+		if(rightHand != null &&  rightHand.Confidence > CONFIDENCE_TO_DRAW){
 			//check just the index is pointing
+			if(leftHand != null && rightHand != null){
+				print (leftHand.GrabStrength+","+ rightHand.GrabStrength);
+			}
 			if ( rightHand.Fingers[0].IsExtended == false && rightHand.Fingers[1].IsExtended == true &&  rightHand.Fingers[2].IsExtended == false && rightHand.Fingers[3].IsExtended == false && rightHand.Fingers[4].IsExtended == false)
 			{
 				DrawOnIndexPoint();
-			}else if(rightHand.GrabStrength > CONFIDENCE_TO_GRAB){
-				RotateDrawnShape();
+			}else if(leftHand!=null && leftHand.GrabStrength >CONFIDENCE_TO_GRAB && rightHand.GrabStrength>CONFIDENCE_TO_GRAB && drawnShape != null){
+				RotateShape();
+				lastMovePinchSpot = Vector3.zero;
+			}else if(rightHand.GrabStrength > CONFIDENCE_TO_GRAB && drawnShape != null){
+				MoveShape();
+				lastRotatePinchSpot = Vector3.zero;
 			}else {
-				lastPinchSpot = Vector3.zero;
+				lastMovePinchSpot = Vector3.zero;
+				lastRotatePinchSpot = Vector3.zero;
 			}
 		}else {
-			lastPinchSpot = Vector3.zero;
+			lastMovePinchSpot = Vector3.zero;
+			lastRotatePinchSpot = Vector3.zero;
 		}
 		
 	}
 
-	void RotateDrawnShape ()
+	void MoveShape ()
+	{
+		Vector3 pinchSpot = (handController.transform.TransformPoint(rightHand.Fingers[1].TipPosition.ToUnityScaled ()));
+		if (lastMovePinchSpot != Vector3.zero) {
+			drawnShape.transform.position  += (pinchSpot-lastMovePinchSpot);
+			print (pinchSpot-lastMovePinchSpot);
+
+		}
+		lastMovePinchSpot = pinchSpot;
+	}
+
+	void RotateShape ()
 	{	
 
-		Vector3 pinchSpot = drawnShape.transform.position-(handController.transform.TransformPoint(rightHand.Fingers[1].TipPosition.ToUnityScaled ()));
-		if(lastPinchSpot != Vector3.zero){
+		Vector3 pinchSpot = drawnShape.collider.bounds.center-(handController.transform.TransformPoint(rightHand.Fingers[1].TipPosition.ToUnityScaled ()));
+		if(lastRotatePinchSpot != Vector3.zero){
 		
-			float angleAroundZ = Vector3.Angle (new Vector3(lastPinchSpot.x,lastPinchSpot.y,0), new Vector3(pinchSpot.x, pinchSpot.y, 0));
-			float angleAroundX = Vector3.Angle (new Vector3(0,lastPinchSpot.y,lastPinchSpot.z), new Vector3(0,pinchSpot.y, pinchSpot.z));
-			float angleAroundY = Vector3.Angle (new Vector3(lastPinchSpot.x,0,lastPinchSpot.z), new Vector3(pinchSpot.x,0,pinchSpot.z));
+			float angleAroundZ = Vector3.Angle (new Vector3(lastRotatePinchSpot.x,lastRotatePinchSpot.y,0), new Vector3(pinchSpot.x, pinchSpot.y, 0));
+			float angleAroundX = Vector3.Angle (new Vector3(0,lastRotatePinchSpot.y,lastRotatePinchSpot.z), new Vector3(0,pinchSpot.y, pinchSpot.z));
+			float angleAroundY = Vector3.Angle (new Vector3(lastRotatePinchSpot.x,0,lastRotatePinchSpot.z), new Vector3(pinchSpot.x,0,pinchSpot.z));
 
 			//vector.Angle gives acute angle- use sign to determine if change is necesary
-			float signZ = Mathf.Sign(Vector3.Dot(new Vector3(0,0,1),Vector3.Cross(new Vector3(lastPinchSpot.x,lastPinchSpot.y,0), new Vector3(pinchSpot.x, pinchSpot.y, 0))));
-			float signX = Mathf.Sign(Vector3.Dot(new Vector3(1,0,0),Vector3.Cross(new Vector3(0,lastPinchSpot.y,lastPinchSpot.z), new Vector3(0,pinchSpot.y, pinchSpot.z))));
-			float signY = Mathf.Sign(Vector3.Dot(new Vector3(0,1,0),Vector3.Cross(new Vector3(lastPinchSpot.x,0,lastPinchSpot.z), new Vector3(pinchSpot.x,0,pinchSpot.z))));
+			float signZ = Mathf.Sign(Vector3.Dot(new Vector3(0,0,1),Vector3.Cross(new Vector3(lastRotatePinchSpot.x,lastRotatePinchSpot.y,0), new Vector3(pinchSpot.x, pinchSpot.y, 0))));
+			float signX = Mathf.Sign(Vector3.Dot(new Vector3(1,0,0),Vector3.Cross(new Vector3(0,lastRotatePinchSpot.y,lastRotatePinchSpot.z), new Vector3(0,pinchSpot.y, pinchSpot.z))));
+			float signY = Mathf.Sign(Vector3.Dot(new Vector3(0,1,0),Vector3.Cross(new Vector3(lastRotatePinchSpot.x,0,lastRotatePinchSpot.z), new Vector3(pinchSpot.x,0,pinchSpot.z))));
 
 			if(signZ < 0){
 				angleAroundZ = 360-angleAroundZ;
@@ -111,11 +132,11 @@ public class DrawMesh : MonoBehaviour {
 			}
 
 	
-			drawnShape.transform.RotateAround (drawnShape.transform.position, new Vector3(0,0,1), angleAroundZ );
-			drawnShape.transform.RotateAround (drawnShape.transform.position, new Vector3(1,0,0), angleAroundX );
-			drawnShape.transform.RotateAround (drawnShape.transform.position, new Vector3(0,1,0), angleAroundY );
+			drawnShape.transform.RotateAround (drawnShape.collider.bounds.center, new Vector3(0,0,1), angleAroundZ );
+			drawnShape.transform.RotateAround (drawnShape.collider.bounds.center, new Vector3(1,0,0), angleAroundX );
+			drawnShape.transform.RotateAround (drawnShape.collider.bounds.center, new Vector3(0,1,0), angleAroundY );
 		}
-		lastPinchSpot = pinchSpot;
+		lastRotatePinchSpot = pinchSpot;
 
 
 
@@ -135,8 +156,7 @@ public class DrawMesh : MonoBehaviour {
 			Points.Add (drawnShape.transform.InverseTransformPoint(handController.transform.TransformPoint(index.JointPosition(Finger.FingerJoint.JOINT_TIP).ToUnityScaled())));
 			Points.Add (drawnShape.transform.InverseTransformPoint(handController.transform.TransformPoint(index.JointPosition(Finger.FingerJoint.JOINT_PIP).ToUnityScaled())));
 			Points.Add (drawnShape.transform.InverseTransformPoint(handController.transform.TransformPoint(index.JointPosition(Finger.FingerJoint.JOINT_MCP).ToUnityScaled())));
-			Edge1.Add (Points [Points.length - 3]);
-			Edge2.Add (Points [Points.length-1]);
+
 
 			UpdateMesh();
 
@@ -173,7 +193,7 @@ public class DrawMesh : MonoBehaviour {
 			Debug.LogError("MeshCollider not found.");
 			return;
 		}
-		meshCollider.convex = true;
+	    //meshCollider.convex = true;
 		drawnShape.AddComponent("Rigidbody");
 		drawnShape.rigidbody.useGravity = false;
 		//drawnShape.rigidbody.constraints = RigidbodyConstraints.FreezeAll;
@@ -182,28 +202,6 @@ public class DrawMesh : MonoBehaviour {
 
 	}
 
-	IEnumerator FillMesh(){
-		//connect ends
-		Tris.Add (Edge1[0]);Tris.Add (Edge2[0]);Tris.Add (Edge2[Edge2.Count]);
-		Tris.Add (Edge2[Edge2.Count]); Tris.Add (Edge1[Edge1.Count]);Tris.Add (Edge1[0]);
-
-		//add triangles for edge1
-		for(int i = 0; i<Edge1.Count-4; i++){
-			Tris.Add(Edge1[i]); Tris.Add(Edge1[i+2]); Tris.Add(Edge1[i+4]);
-		}
-		Tris.Add (Edge1[Edge1.Count-3]); Tris.Add (Edge1[Edge1.Count-1]);Tris.Add (Edge1[1]);
-		Tris.Add (Edge1[Edge1.Count-2]); Tris.Add (Edge1[0]);Tris.Add (Edge1[2]);
-
-		//add triangles for edge2
-		for(int i = 0; i<Edge2.Count-4; i++){
-			Tris.Add(Edge2[i]); Tris.Add(Edge2[i+2]); Tris.Add(Edge2[i+4]);
-		}
-		Tris.Add (Edge2[Edge2.Count-3]); Tris.Add (Edge2[Edge2.Count-1]);Tris.Add (Edge2[1]);
-		Tris.Add (Edge2[Edge2.Count-2]); Tris.Add (Edge2[0]);Tris.Add (Edge2[2]);
-
-
-
-	}
 
 	private void UpdateMesh(){
 
