@@ -18,6 +18,11 @@ public class DrawMesh : MonoBehaviour {
 
 	public GameObject prefabShape;
 	GameObject drawnShape; 
+<<<<<<< HEAD
+=======
+	GameObject level;
+
+>>>>>>> FETCH_HEAD
 	Vector3 lastMovePinchSpot, lastRotatePinchSpot;
 
 	Quaternion lastRotation;
@@ -26,6 +31,7 @@ public class DrawMesh : MonoBehaviour {
 	
 	float CONFIDENCE_TO_DRAW = 0.1f; // confidence needed that hand is pointing to add to mesh
 	float CONFIDENCE_TO_GRAB = 0.3f;
+	int LEVEL_HEIGHT = 10;
 	public HandController handController;
 		
 	enum LastAction {NONE, DRAW, TRANSLATE, ROTATE};
@@ -38,7 +44,12 @@ public class DrawMesh : MonoBehaviour {
 		Points = new List<Vector3>();
 		Verts = new List<Vector3>();
 		Tris = new List<int> ();
+<<<<<<< HEAD
 		NewShape (Vector3.zero, lastObject);
+=======
+		level = GameObject.Find("Level");
+
+>>>>>>> FETCH_HEAD
 
 	}
 
@@ -128,27 +139,34 @@ public class DrawMesh : MonoBehaviour {
 	{	
 
 		Vector3 pinchSpot = drawnShape.collider.bounds.center-(handController.transform.TransformPoint(rightHand.Fingers[1].TipPosition.ToUnityScaled ()));
-		if(lastRotatePinchSpot != Vector3.zero){
-		
-			float angleAroundZ = Vector3.Angle (new Vector3(lastRotatePinchSpot.x,lastRotatePinchSpot.y,0), new Vector3(pinchSpot.x, pinchSpot.y, 0));
-			float angleAroundX = Vector3.Angle (new Vector3(0,lastRotatePinchSpot.y,lastRotatePinchSpot.z), new Vector3(0,pinchSpot.y, pinchSpot.z));
-			float angleAroundY = Vector3.Angle (new Vector3(lastRotatePinchSpot.x,0,lastRotatePinchSpot.z), new Vector3(pinchSpot.x,0,pinchSpot.z));
+		if (lastRotatePinchSpot != Vector3.zero) {
+
+			float angleAroundZ = Vector3.Angle (new Vector3 (lastRotatePinchSpot.x, lastRotatePinchSpot.y, 0), new Vector3 (pinchSpot.x, pinchSpot.y, 0));
+			float angleAroundX = Vector3.Angle (new Vector3 (0, lastRotatePinchSpot.y, lastRotatePinchSpot.z), new Vector3 (0, pinchSpot.y, pinchSpot.z));
+			float angleAroundY = Vector3.Angle (new Vector3 (lastRotatePinchSpot.x, 0, lastRotatePinchSpot.z), new Vector3 (pinchSpot.x, 0, pinchSpot.z));
 
 			//vector.Angle gives acute angle- use sign to determine if change is necesary
-			float signZ = Mathf.Sign(Vector3.Dot(new Vector3(0,0,1),Vector3.Cross(new Vector3(lastRotatePinchSpot.x,lastRotatePinchSpot.y,0), new Vector3(pinchSpot.x, pinchSpot.y, 0))));
-			float signX = Mathf.Sign(Vector3.Dot(new Vector3(1,0,0),Vector3.Cross(new Vector3(0,lastRotatePinchSpot.y,lastRotatePinchSpot.z), new Vector3(0,pinchSpot.y, pinchSpot.z))));
-			float signY = Mathf.Sign(Vector3.Dot(new Vector3(0,1,0),Vector3.Cross(new Vector3(lastRotatePinchSpot.x,0,lastRotatePinchSpot.z), new Vector3(pinchSpot.x,0,pinchSpot.z))));
+			float signZ = Mathf.Sign (Vector3.Dot (new Vector3 (0, 0, 1), Vector3.Cross (new Vector3 (lastRotatePinchSpot.x, lastRotatePinchSpot.y, 0), new Vector3 (pinchSpot.x, pinchSpot.y, 0))));
+			float signX = Mathf.Sign (Vector3.Dot (new Vector3 (1, 0, 0), Vector3.Cross (new Vector3 (0, lastRotatePinchSpot.y, lastRotatePinchSpot.z), new Vector3 (0, pinchSpot.y, pinchSpot.z))));
+			float signY = Mathf.Sign (Vector3.Dot (new Vector3 (0, 1, 0), Vector3.Cross (new Vector3 (lastRotatePinchSpot.x, 0, lastRotatePinchSpot.z), new Vector3 (pinchSpot.x, 0, pinchSpot.z))));
 
-			if(signZ < 0){
-				angleAroundZ = 360-angleAroundZ;
+			if (signZ < 0) {
+					angleAroundZ = 360 - angleAroundZ;
 			}
-			if(signX < 0){
-				angleAroundX = 360-angleAroundX;
+			if (signX < 0) {
+					angleAroundX = 360 - angleAroundX;
 			}
-			if(signY < 0){
-				angleAroundY = 360-angleAroundY;
+			if (signY < 0) {
+					angleAroundY = 360 - angleAroundY;
 			}
+			print (pinchSpot.y);
+			if (pinchSpot.y > LEVEL_HEIGHT) {
+				
+					drawnShape.transform.RotateAround (drawnShape.collider.bounds.center, new Vector3 (0, 0, 1), angleAroundZ);
+					drawnShape.transform.RotateAround (drawnShape.collider.bounds.center, new Vector3 (1, 0, 0), angleAroundX);
+					drawnShape.transform.RotateAround (drawnShape.collider.bounds.center, new Vector3 (0, 1, 0), angleAroundY);
 
+<<<<<<< HEAD
 	
 			drawnShape.transform.RotateAround (drawnShape.collider.bounds.center, new Vector3(0,0,1), angleAroundZ );
 			drawnShape.transform.RotateAround (drawnShape.collider.bounds.center, new Vector3(1,0,0), angleAroundX );
@@ -157,6 +175,15 @@ public class DrawMesh : MonoBehaviour {
 			lastAction =LastAction.ROTATE;
 		}else{
 			lastRotation = drawnShape.transform.rotation;
+=======
+			}
+			else
+			{
+				//level.transform.RotateAround(Vector3.zero, Vector3.forward, angleAroundZ);
+				//level.transform.RotateAround(Vector3.zero, Vector3.right, angleAroundX);
+				level.transform.RotateAround(Vector3.zero, Vector3.up, angleAroundY);
+			}
+>>>>>>> FETCH_HEAD
 		}
 		lastRotatePinchSpot = pinchSpot;
 
