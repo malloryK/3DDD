@@ -131,6 +131,7 @@
      <Compile Include="Assets\PrimitivePlus\Scripts\PrimitivePlusEditor.cs" />
      <Compile Include="Assets\Resources\Scripts\DrawMesh.cs" />
      <Compile Include="Assets\Resources\Scripts\DrawnShape.cs" />
+     <Compile Include="Assets\Resources\Scripts\UndoScript.cs" />
      <None Include="Assets\LeapMotion\Resources\LeapIRUndistorted.shader" />
      <None Include="Assets\Plugins\donotdelete.txt" />
      <None Include="Assets\LeapMotion\Materials\Sources\Shaders\Toony-Basic.shader" />

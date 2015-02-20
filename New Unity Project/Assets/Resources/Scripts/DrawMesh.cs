@@ -3,12 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using Leap;
 
+
 public class DrawMesh : MonoBehaviour {
 	Mesh mesh;
 	Material mat;
 	List<Vector3> Points;
 	List<Vector3> Verts;
-
 	List<int> Tris;
 
 	Hand rightHand;
@@ -18,33 +18,45 @@ public class DrawMesh : MonoBehaviour {
 
 	public GameObject prefabShape;
 	GameObject drawnShape; 
-
 	Vector3 lastMovePinchSpot, lastRotatePinchSpot;
 
-
-	//float ANGULAR_DRAG = 10; //drag when spinning shape
+	Quaternion lastRotation;
+	Vector3 lastPosition;
+	GameObject lastObject;
+	
 	float CONFIDENCE_TO_DRAW = 0.1f; // confidence needed that hand is pointing to add to mesh
 	float CONFIDENCE_TO_GRAB = 0.3f;
 	public HandController handController;
 		
+	enum LastAction {NONE, DRAW, TRANSLATE, ROTATE};
+	LastAction lastAction = LastAction.NONE;
+
+	bool isDrawing = false;
+
 
 	void Start () {
 		Points = new List<Vector3>();
 		Verts = new List<Vector3>();
 		Tris = new List<int> ();
-
+		NewShape (Vector3.zero, lastObject);
 
 	}
 
-	void NewShape(Vector3 position){
+	void NewShape(Vector3 position, GameObject overWrite){
+
+		if (overWrite != null){
+			Destroy (overWrite);
+		}
 
 		Points.Clear ();
 		Verts.Clear ();
 		Tris.Clear ();
 
-		drawnShape =  Instantiate (prefabShape,position , Quaternion.identity ) as GameObject;
+		overWrite =  Instantiate (prefabShape,position , Quaternion.identity ) as GameObject;
+		if(overWrite == drawnShape){
 
-		CreateMesh ();
+			CreateMesh ();
+		}
 		
 	}
 
@@ -52,8 +64,8 @@ public class DrawMesh : MonoBehaviour {
 	void LateUpdate () {
 		//get hands 
 		rightHand = handController.GetFrame().Hands.Rightmost;	
-		//rightRigid = handController.GetAllPhysicsHands ()[0];
 		leftHand = handController.GetFrame ().Hands.Leftmost;
+		//check for correct handedness
 		Hand temp = null;
 		if (!rightHand.IsRight) {
 			temp = rightHand;
@@ -69,28 +81,32 @@ public class DrawMesh : MonoBehaviour {
 			}
 		} 
 
-		// if there is a right hand and we're confident of its state
+		//recognize gestures of hand and assign tasks
 		if(rightHand != null &&  rightHand.Confidence > CONFIDENCE_TO_DRAW){
 			//check just the index is pointing
-			if(leftHand != null && rightHand != null){
-				print (leftHand.GrabStrength+","+ rightHand.GrabStrength);
-			}
+
+			//drawing
 			if ( rightHand.Fingers[0].IsExtended == false && rightHand.Fingers[1].IsExtended == true &&  rightHand.Fingers[2].IsExtended == false && rightHand.Fingers[3].IsExtended == false && rightHand.Fingers[4].IsExtended == false)
 			{
 				DrawOnIndexPoint();
-			}else if(leftHand!=null && leftHand.GrabStrength >CONFIDENCE_TO_GRAB && rightHand.GrabStrength>CONFIDENCE_TO_GRAB && drawnShape != null){
-				RotateShape();
-				lastMovePinchSpot = Vector3.zero;
-			}else if(rightHand.GrabStrength > CONFIDENCE_TO_GRAB && drawnShape != null){
-				MoveShape();
-				lastRotatePinchSpot = Vector3.zero;
-			}else {
-				lastMovePinchSpot = Vector3.zero;
-				lastRotatePinchSpot = Vector3.zero;
+
+			}else{
+				isDrawing = false;
+				// rotating
+				 if(leftHand!=null && leftHand.GrabStrength >CONFIDENCE_TO_GRAB && rightHand.GrabStrength>CONFIDENCE_TO_GRAB && drawnShape != null){
+					RotateShape();
+
+				}else{
+					lastRotatePinchSpot = Vector3.zero;
+					//moving
+					 if(rightHand.GrabStrength > CONFIDENCE_TO_GRAB && drawnShape != null){
+						MoveShape();
+
+					}else {
+						lastMovePinchSpot = Vector3.zero;
+					}
+				}
 			}
-		}else {
-			lastMovePinchSpot = Vector3.zero;
-			lastRotatePinchSpot = Vector3.zero;
 		}
 		
 	}
@@ -100,8 +116,10 @@ public class DrawMesh : MonoBehaviour {
 		Vector3 pinchSpot = (handController.transform.TransformPoint(rightHand.Fingers[1].TipPosition.ToUnityScaled ()));
 		if (lastMovePinchSpot != Vector3.zero) {
 			drawnShape.transform.position  += (pinchSpot-lastMovePinchSpot);
-			print (pinchSpot-lastMovePinchSpot);
+			lastAction = LastAction.TRANSLATE;
 
+		}else{
+			lastPosition = drawnShape.transform.position;
 		}
 		lastMovePinchSpot = pinchSpot;
 	}
@@ -135,6 +153,10 @@ public class DrawMesh : MonoBehaviour {
 			drawnShape.transform.RotateAround (drawnShape.collider.bounds.center, new Vector3(0,0,1), angleAroundZ );
 			drawnShape.transform.RotateAround (drawnShape.collider.bounds.center, new Vector3(1,0,0), angleAroundX );
 			drawnShape.transform.RotateAround (drawnShape.collider.bounds.center, new Vector3(0,1,0), angleAroundY );
+
+			lastAction =LastAction.ROTATE;
+		}else{
+			lastRotation = drawnShape.transform.rotation;
 		}
 		lastRotatePinchSpot = pinchSpot;
 
@@ -144,13 +166,20 @@ public class DrawMesh : MonoBehaviour {
 
 	void DrawOnIndexPoint(){
 		//check just the index is pointing
-			
 
+		if (!isDrawing){
+			isDrawing = true;
+			lastObject = drawnShape;
+			lastObject.SetActive(false);
+		}
+			lastAction = LastAction.DRAW;
+		
 			//draw
+			
 			Finger index = rightHand.Fingers[1];
 
 			if(drawnShape == null){
-				NewShape(handController.transform.TransformPoint(index.TipPosition.ToUnityScaled()));
+				NewShape(handController.transform.TransformPoint(index.TipPosition.ToUnityScaled()), drawnShape);
 			}
 			
 			Points.Add (drawnShape.transform.InverseTransformPoint(handController.transform.TransformPoint(index.JointPosition(Finger.FingerJoint.JOINT_TIP).ToUnityScaled())));
@@ -193,15 +222,35 @@ public class DrawMesh : MonoBehaviour {
 			Debug.LogError("MeshCollider not found.");
 			return;
 		}
-	    //meshCollider.convex = true;
+	    
 		drawnShape.AddComponent("Rigidbody");
 		drawnShape.rigidbody.useGravity = false;
-		//drawnShape.rigidbody.constraints = RigidbodyConstraints.FreezeAll;
-		//drawnShape.rigidbody.angularDrag = ANGULAR_DRAG; 
 		drawnShape.collider.isTrigger = true;
 
 	}
 
+	public void UndoAction(){
+		print ("undo");
+		switch(lastAction){
+			case LastAction.NONE:
+				break;
+			case LastAction.DRAW:
+				drawnShape = lastObject;
+				//Destroy(lastObject);
+				NewShape(Vector3.zero, lastObject);
+				drawnShape.SetActive(true);
+			lastAction = LastAction.NONE;
+				break;
+			case LastAction.ROTATE:
+				drawnShape.transform.rotation = lastRotation;
+			lastAction = LastAction.NONE;
+				break;
+			case LastAction.TRANSLATE:
+				drawnShape.transform.position = lastPosition;
+			lastAction = LastAction.NONE;
+				break;
+		}
+	}
 
 	private void UpdateMesh(){
 
