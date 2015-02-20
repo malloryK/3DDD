@@ -18,11 +18,11 @@ public class DrawMesh : MonoBehaviour {
 
 	public GameObject prefabShape;
 	GameObject drawnShape; 
-<<<<<<< HEAD
-=======
+
+
 	GameObject level;
 
->>>>>>> FETCH_HEAD
+
 	Vector3 lastMovePinchSpot, lastRotatePinchSpot;
 
 	Quaternion lastRotation;
@@ -44,12 +44,11 @@ public class DrawMesh : MonoBehaviour {
 		Points = new List<Vector3>();
 		Verts = new List<Vector3>();
 		Tris = new List<int> ();
-<<<<<<< HEAD
+
 		NewShape (Vector3.zero, lastObject);
-=======
 		level = GameObject.Find("Level");
 
->>>>>>> FETCH_HEAD
+
 
 	}
 
@@ -159,23 +158,15 @@ public class DrawMesh : MonoBehaviour {
 			if (signY < 0) {
 					angleAroundY = 360 - angleAroundY;
 			}
-			print (pinchSpot.y);
+		
 			if (pinchSpot.y > LEVEL_HEIGHT) {
 				
 					drawnShape.transform.RotateAround (drawnShape.collider.bounds.center, new Vector3 (0, 0, 1), angleAroundZ);
 					drawnShape.transform.RotateAround (drawnShape.collider.bounds.center, new Vector3 (1, 0, 0), angleAroundX);
 					drawnShape.transform.RotateAround (drawnShape.collider.bounds.center, new Vector3 (0, 1, 0), angleAroundY);
 
-<<<<<<< HEAD
-	
-			drawnShape.transform.RotateAround (drawnShape.collider.bounds.center, new Vector3(0,0,1), angleAroundZ );
-			drawnShape.transform.RotateAround (drawnShape.collider.bounds.center, new Vector3(1,0,0), angleAroundX );
-			drawnShape.transform.RotateAround (drawnShape.collider.bounds.center, new Vector3(0,1,0), angleAroundY );
 
 			lastAction =LastAction.ROTATE;
-		}else{
-			lastRotation = drawnShape.transform.rotation;
-=======
 			}
 			else
 			{
@@ -183,7 +174,10 @@ public class DrawMesh : MonoBehaviour {
 				//level.transform.RotateAround(Vector3.zero, Vector3.right, angleAroundX);
 				level.transform.RotateAround(Vector3.zero, Vector3.up, angleAroundY);
 			}
->>>>>>> FETCH_HEAD
+
+		}else{
+			lastRotation = drawnShape.transform.rotation;
+			
 		}
 		lastRotatePinchSpot = pinchSpot;
 
