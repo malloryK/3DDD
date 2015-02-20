@@ -113,7 +113,15 @@ public class DrawMesh : MonoBehaviour {
 				isDrawing = false;
 				// rotating
 				 if(leftHand!=null && leftHand.GrabStrength >CONFIDENCE_TO_GRAB && rightHand.GrabStrength>CONFIDENCE_TO_GRAB && drawnShape != null){
-					RotateShape();
+					if(rightHand.WristPosition.y > LEVEL_HEIGHT)
+					{
+						RotateShape(drawnShape.collider.bounds.center);
+
+					}
+					else
+					{
+						RotateShape(level.transform.position);
+					}
 
 				}else{
 					lastRotatePinchSpot = Vector3.zero;
@@ -143,10 +151,10 @@ public class DrawMesh : MonoBehaviour {
 		lastMovePinchSpot = pinchSpot;
 	}
 
-	void RotateShape ()
+	void RotateShape (Vector3 objectPoint)
 	{	
 
-		Vector3 pinchSpot = drawnShape.collider.bounds.center-(handController.transform.TransformPoint(rightHand.Fingers[1].TipPosition.ToUnityScaled ()));
+		Vector3 pinchSpot = objectPoint-(handController.transform.TransformPoint(rightHand.Fingers[1].TipPosition.ToUnityScaled ()));
 		if (lastRotatePinchSpot != Vector3.zero) {
 
 			float angleAroundZ = Vector3.Angle (new Vector3 (lastRotatePinchSpot.x, lastRotatePinchSpot.y, 0), new Vector3 (pinchSpot.x, pinchSpot.y, 0));
@@ -168,20 +176,17 @@ public class DrawMesh : MonoBehaviour {
 					angleAroundY = 360 - angleAroundY;
 			}
 		
-			if (pinchSpot.y > LEVEL_HEIGHT) {
+			if (objectPoint != level.transform.position) {
 				
-					drawnShape.transform.RotateAround (drawnShape.collider.bounds.center, new Vector3 (0, 0, 1), angleAroundZ);
-					drawnShape.transform.RotateAround (drawnShape.collider.bounds.center, new Vector3 (1, 0, 0), angleAroundX);
-					drawnShape.transform.RotateAround (drawnShape.collider.bounds.center, new Vector3 (0, 1, 0), angleAroundY);
+				drawnShape.transform.RotateAround (objectPoint, new Vector3 (0, 0, 1), angleAroundZ);
+				drawnShape.transform.RotateAround (objectPoint, new Vector3 (1, 0, 0), angleAroundX);
+				drawnShape.transform.RotateAround (objectPoint, new Vector3 (0, 1, 0), angleAroundY);
 
-
-			lastAction =LastAction.ROTATE;
+				lastAction =LastAction.ROTATE;
 			}
 			else
 			{
-				//level.transform.RotateAround(Vector3.zero, Vector3.forward, angleAroundZ);
-				//level.transform.RotateAround(Vector3.zero, Vector3.right, angleAroundX);
-				level.transform.RotateAround(Vector3.zero, Vector3.up, angleAroundY);
+				level.transform.RotateAround(objectPoint, Vector3.up, angleAroundY);
 			}
 
 		}else{
