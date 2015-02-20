@@ -31,7 +31,7 @@ public class DrawMesh : MonoBehaviour {
 	
 	float CONFIDENCE_TO_DRAW = 0.1f; // confidence needed that hand is pointing to add to mesh
 	float CONFIDENCE_TO_GRAB = 0.3f;
-	int LEVEL_HEIGHT = 10;
+	float LEVEL_HEIGHT = 5.5f;
 	public HandController handController;
 		
 	enum LastAction {NONE, DRAW, TRANSLATE, ROTATE};
@@ -52,21 +52,30 @@ public class DrawMesh : MonoBehaviour {
 
 	}
 
-	void NewShape(Vector3 position, GameObject overWrite){
+	void CopyShape(){
+//		ArrayList comps= lastObject.GetComponents();
+//		for(int i = 0; i<comps.Count-1; i++){
+//			Component.Destroy (comps[i]);
+//		}
+//		ArrayList comps2 = drawnShape.GetComponents ();
+//		for(int i = 0; i<comps.Count-1; i++){
+//			lastObject.AddComponent(comps2[1]) ;
+//		}
+//
+//		lastObject.SetActive(false);
 
-		if (overWrite != null){
-			Destroy (overWrite);
-		}
+	}
+
+	void NewShape(Vector3 position, GameObject overWrite){
 
 		Points.Clear ();
 		Verts.Clear ();
 		Tris.Clear ();
+	
+		drawnShape =  Instantiate (prefabShape,position , Quaternion.identity ) as GameObject;
 
-		overWrite =  Instantiate (prefabShape,position , Quaternion.identity ) as GameObject;
-		if(overWrite == drawnShape){
-
-			CreateMesh ();
-		}
+		CreateMesh ();
+		
 		
 	}
 
@@ -190,8 +199,9 @@ public class DrawMesh : MonoBehaviour {
 
 		if (!isDrawing){
 			isDrawing = true;
-			lastObject = drawnShape;
-			lastObject.SetActive(false);
+			//if(drawnShape != null){
+			//	CopyShape();
+			//}
 		}
 			lastAction = LastAction.DRAW;
 		
