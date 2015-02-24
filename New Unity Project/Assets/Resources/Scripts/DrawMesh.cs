@@ -136,11 +136,12 @@ public class DrawMesh : MonoBehaviour {
 				}
 			}
 		}
+		if (Input.anyKeyDown) { 	 	
+			drawnShape.rigidbody.useGravity = true; 	 	
+		}
 	}
 
-	if (Input.anyKeyDown) { 	 	
-		drawnShape.rigidbody.useGravity = true; 	 	
-	}
+
 
 	void MoveShape ()
 	{
