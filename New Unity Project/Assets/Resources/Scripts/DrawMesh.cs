@@ -17,7 +17,8 @@ public class DrawMesh : MonoBehaviour {
 	HandModel leftRigid;
 
 	public GameObject prefabShape;
-	GameObject drawnShape; 
+	GameObject drawnShape;
+	GameObject drawBox;
 
 
 	GameObject level;
@@ -48,7 +49,7 @@ public class DrawMesh : MonoBehaviour {
 		NewShape (Vector3.zero, lastObject);
 		level = GameObject.Find("Level");
 
-
+		drawBox = GameObject.FindGameObjectWithTag ("DrawBox");
 
 	}
 
@@ -135,7 +136,10 @@ public class DrawMesh : MonoBehaviour {
 				}
 			}
 		}
-		
+	}
+
+	if (Input.anyKeyDown) { 	 	
+		drawnShape.rigidbody.useGravity = true; 	 	
 	}
 
 	void MoveShape ()
@@ -217,11 +221,14 @@ public class DrawMesh : MonoBehaviour {
 			if(drawnShape == null){
 				NewShape(handController.transform.TransformPoint(index.TipPosition.ToUnityScaled()), drawnShape);
 			}
-			
-			Points.Add (drawnShape.transform.InverseTransformPoint(handController.transform.TransformPoint(index.JointPosition(Finger.FingerJoint.JOINT_TIP).ToUnityScaled())));
-			Points.Add (drawnShape.transform.InverseTransformPoint(handController.transform.TransformPoint(index.JointPosition(Finger.FingerJoint.JOINT_PIP).ToUnityScaled())));
-			Points.Add (drawnShape.transform.InverseTransformPoint(handController.transform.TransformPoint(index.JointPosition(Finger.FingerJoint.JOINT_MCP).ToUnityScaled())));
 
+			//if the finger tip is inside the draw box 	 	
+			if (drawBox.collider.bounds.Contains(drawnShape.transform.InverseTransformPoint(handController.transform.TransformPoint(index.JointPosition(Finger.FingerJoint.JOINT_TIP).ToUnityScaled())))) 	 	
+			{
+				Points.Add (drawnShape.transform.InverseTransformPoint(handController.transform.TransformPoint(index.JointPosition(Finger.FingerJoint.JOINT_TIP).ToUnityScaled())));
+				Points.Add (drawnShape.transform.InverseTransformPoint(handController.transform.TransformPoint(index.JointPosition(Finger.FingerJoint.JOINT_PIP).ToUnityScaled())));
+				Points.Add (drawnShape.transform.InverseTransformPoint(handController.transform.TransformPoint(index.JointPosition(Finger.FingerJoint.JOINT_MCP).ToUnityScaled())));
+			}
 
 			UpdateMesh();
 
@@ -262,7 +269,7 @@ public class DrawMesh : MonoBehaviour {
 		drawnShape.AddComponent("Rigidbody");
 		drawnShape.rigidbody.useGravity = false;
 		drawnShape.collider.isTrigger = true;
-
+		drawnShape.rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
 	}
 
 	public void UndoAction(){
