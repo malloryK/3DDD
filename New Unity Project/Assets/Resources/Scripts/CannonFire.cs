@@ -13,7 +13,7 @@ public class CannonFire : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if (Input.anyKeyDown) {
+		if (Input.GetKeyDown ("space")) {
 			firing = true;
 		}
 	
