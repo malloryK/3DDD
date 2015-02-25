@@ -15,10 +15,9 @@ public class DrawMesh : MonoBehaviour {
 	HandModel rightRigid;
 	Hand leftHand;
 	HandModel leftRigid;
-
+	public GameObject drawBox;
 	public GameObject prefabShape;
 	GameObject drawnShape;
-	GameObject drawBox;
 
 
 	GameObject level;
@@ -49,7 +48,7 @@ public class DrawMesh : MonoBehaviour {
 		//NewShape (Vector3.zero, lastObject);
 		level = GameObject.Find("Level");
 
-		drawBox = GameObject.FindGameObjectWithTag ("DrawBox");
+
 
 	}
 
@@ -137,10 +136,10 @@ public class DrawMesh : MonoBehaviour {
 			}
 		}
 		if (Input.GetKeyDown ("space")) { 	 	
-
-			drawnShape.collider.isTrigger= false;
-			drawnShape.rigidbody.useGravity = true;
-
+			if(drawnShape != null){
+				drawnShape.collider.isTrigger= false;
+				drawnShape.rigidbody.useGravity = true;
+			}
 
 		}
 	}
@@ -210,36 +209,33 @@ public class DrawMesh : MonoBehaviour {
 
 	void DrawOnIndexPoint(){
 		//check just the index is pointing
-
-		if (!isDrawing){
-			isDrawing = true;
-			//if(drawnShape != null){
-			//	CopyShape();
-			//}
-		}
-			lastAction = LastAction.DRAW;
-		
 			//draw
 			
-			Finger index = rightHand.Fingers[1];
+			Finger index = rightHand.Fingers [1];
 
-			if(drawnShape == null){
-				NewShape(handController.transform.TransformPoint(index.TipPosition.ToUnityScaled()), drawnShape);
-			}
-
-			print (index.JointPosition (Finger.FingerJoint.JOINT_TIP).ToUnityScaled ());
-
-			//if the finger tip is inside the draw box 	 	
-			if (drawBox.collider.bounds.Contains(drawnShape.transform.InverseTransformPoint(handController.transform.TransformPoint(index.JointPosition(Finger.FingerJoint.JOINT_TIP).ToUnityScaled())))) 	 	
-			{
-				Points.Add (drawnShape.transform.InverseTransformPoint(handController.transform.TransformPoint(index.JointPosition(Finger.FingerJoint.JOINT_TIP).ToUnityScaled())));
-				Points.Add (drawnShape.transform.InverseTransformPoint(handController.transform.TransformPoint(index.JointPosition(Finger.FingerJoint.JOINT_PIP).ToUnityScaled())));
-				Points.Add (drawnShape.transform.InverseTransformPoint(handController.transform.TransformPoint(index.JointPosition(Finger.FingerJoint.JOINT_MCP).ToUnityScaled())));
-
-				UpdateMesh();
-			}
-
+		if (drawBox.collider.bounds.Contains (handController.transform.TransformPoint (index.JointPosition (Finger.FingerJoint.JOINT_TIP).ToUnityScaled ()))) {
 			
+
+			if (drawnShape == null) {
+				NewShape (handController.transform.TransformPoint (index.TipPosition.ToUnityScaled ()), drawnShape);
+			}
+			if (!isDrawing) {
+				isDrawing = true;
+				//if(drawnShape != null){
+				//	CopyShape();
+				//}
+			}
+			lastAction = LastAction.DRAW;
+			
+
+			Points.Add (drawnShape.transform.InverseTransformPoint (handController.transform.TransformPoint (index.JointPosition (Finger.FingerJoint.JOINT_TIP).ToUnityScaled ())));
+			Points.Add (drawnShape.transform.InverseTransformPoint (handController.transform.TransformPoint (index.JointPosition (Finger.FingerJoint.JOINT_PIP).ToUnityScaled ())));
+			Points.Add (drawnShape.transform.InverseTransformPoint (handController.transform.TransformPoint (index.JointPosition (Finger.FingerJoint.JOINT_MCP).ToUnityScaled ())));
+
+			UpdateMesh ();
+
+
+		}
 
 		
 	}
@@ -336,11 +332,9 @@ public class DrawMesh : MonoBehaviour {
 
 			//meshCollider.sharedMesh = null;
 			meshCollider.sharedMesh = mesh;
-			meshCollider.convex = true;
-			print(meshCollider.bounds);
-			//meshCollider.isTrigger = false;
+
 			drawnShape.renderer.material = mat;
-			//mesh.Optimize();
+			mesh.Optimize();
 
 
 		}

@@ -13,7 +13,7 @@ public class CannonFire : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if (Input.GetKeyDown ("space")) {
+		if (Input.GetKeyUp ("space") == true) {
 			firing = true;
 		}
 	
@@ -21,11 +21,6 @@ public class CannonFire : MonoBehaviour {
 
 			StartCoroutine(WaitAndFire());
 			firing = false;
-
-			//do firing
-			//this.rigidbody.AddForce(transform.forward * 12, ForceMode.Impulse);
-			//firing = false;
-
 
 		}
 	}
