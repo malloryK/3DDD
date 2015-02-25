@@ -129,7 +129,6 @@
      <Compile Include="Assets\OVR\Scripts\Util\OVRVisionGuide.cs" />
      <Compile Include="Assets\Resources\Scripts\CannonFire.cs" />
      <Compile Include="Assets\Resources\Scripts\DrawMesh.cs" />
-     <Compile Include="Assets\Resources\Scripts\DrawnShape.cs" />
      <Compile Include="Assets\Resources\Scripts\UndoScript.cs" />
      <None Include="Assets\LeapMotion\Resources\LeapIRUndistorted.shader" />
      <None Include="Assets\Plugins\donotdelete.txt" />

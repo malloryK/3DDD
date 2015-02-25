@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class CannonFire : MonoBehaviour {
-
+	public ParticleSystem particles;
 	bool firing = false;
 
 	// Use this for initialization
@@ -29,6 +29,8 @@ public class CannonFire : MonoBehaviour {
 
 		yield return new WaitForSeconds(2.0f);
 		this.rigidbody.AddForce(transform.forward * 12, ForceMode.Impulse);
+
+		particles.Play ();
 
 	}
 }

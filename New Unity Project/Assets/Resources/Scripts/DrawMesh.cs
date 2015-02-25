@@ -247,7 +247,7 @@ public class DrawMesh : MonoBehaviour {
 		drawnShape.AddComponent ("MeshFilter");
 		drawnShape.AddComponent ("MeshRenderer");
 		drawnShape.AddComponent ("MeshCollider");
-		mat = Resources.Load ("Materials/Default") as Material;
+		mat = Resources.Load ("Materials/Shape") as Material;
 		if(mat == null){
 			Debug.LogError ("Materials not found.");
 			return;
