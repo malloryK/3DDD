@@ -29,7 +29,7 @@ public class HandController : MonoBehaviour {
   // If hands are in charge of Destroying themselves, make this false.
   public bool destroyHands = true;
 
-  public Vector3 handMovementScale = Vector3.one;
+  public Vector3 handMovementScale = new Vector3(1,1,1);
 
   // Recording parameters.
   public bool enableRecordPlayback = false;
@@ -73,6 +73,7 @@ public class HandController : MonoBehaviour {
   }
 
   void Start() {
+	handMovementScale = new Vector3 (5, 5, 1);
     // Initialize hand lookup tables.
     hand_graphics_ = new Dictionary<int, HandModel>();
     hand_physics_ = new Dictionary<int, HandModel>();
@@ -117,6 +118,7 @@ public class HandController : MonoBehaviour {
     int num_hands = leap_hands.Count;
     for (int h = 0; h < num_hands; ++h) {
       Hand leap_hand = leap_hands[h];
+
       
       HandModel model = (mirrorZAxis != leap_hand.IsLeft) ? left_model : right_model;
 

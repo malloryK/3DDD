@@ -54,14 +54,14 @@ public abstract class FingerModel : MonoBehaviour {
 
   // Returns any additional movement the finger needs because of non-relative palm movement.
   public Vector3 GetOffset() {
-    return offset_;
+		return offset_;
   }
 
   // Returns the location of the tip of the finger in relation to the controller.
   public Vector3 GetTipPosition() {
     Vector3 local_tip =
         finger_.Bone((Bone.BoneType.TYPE_DISTAL)).NextJoint.ToUnityScaled(mirror_z_axis_);
-    return controller_.transform.TransformPoint(local_tip) + offset_;
+		return controller_.transform.TransformPoint(local_tip) + GetOffset();
   }
 
   // Returns the location of the given joint on the finger in relation to the controller.
@@ -71,7 +71,7 @@ public abstract class FingerModel : MonoBehaviour {
     
     Vector3 local_position =
         finger_.Bone((Bone.BoneType)(joint)).PrevJoint.ToUnityScaled(mirror_z_axis_);
-    return controller_.transform.TransformPoint(local_position) + offset_;
+		return controller_.transform.TransformPoint(local_position) + GetOffset();
   }
 
   // Returns a ray from the tip of the finger in the direction it is pointing.
@@ -84,7 +84,7 @@ public abstract class FingerModel : MonoBehaviour {
   public Vector3 GetBoneCenter(int bone_type) {
     Bone bone = finger_.Bone((Bone.BoneType)(bone_type));
     return controller_.transform.TransformPoint(bone.Center.ToUnityScaled(mirror_z_axis_)) +
-           offset_;
+			GetOffset();
   }
 
   // Returns the direction the given bone is facing on the finger in relation to the controller.

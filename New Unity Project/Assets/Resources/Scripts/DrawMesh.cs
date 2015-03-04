@@ -226,12 +226,42 @@ public class DrawMesh : MonoBehaviour {
 				//}
 			}
 			lastAction = LastAction.DRAW;
-			
 
-			Points.Add (drawnShape.transform.InverseTransformPoint (handController.transform.TransformPoint (index.JointPosition (Finger.FingerJoint.JOINT_TIP).ToUnityScaled ())));
-			Points.Add (drawnShape.transform.InverseTransformPoint (handController.transform.TransformPoint (index.JointPosition (Finger.FingerJoint.JOINT_PIP).ToUnityScaled ())));
-			Points.Add (drawnShape.transform.InverseTransformPoint (handController.transform.TransformPoint (index.JointPosition (Finger.FingerJoint.JOINT_MCP).ToUnityScaled ())));
+			/*Vector3 additional_move = handController.handMovementScale;
+			Vector3 offset =
+				Vector3.Scale(additional_move, index.JointPosition (Finger.FingerJoint.JOINT_TIP).ToUnityScaled());
 
+
+			offset = handController.transform.TransformPoint(offset) -
+				handController.transform.position;*/
+
+			Vector3 additional_movement = handController.handMovementScale - new Vector3(1,1,1);
+			Vector3 scaled_tip_position =
+				Vector3.Scale(additional_movement, index.JointPosition (Finger.FingerJoint.JOINT_TIP).ToUnityScaled());
+
+			//print ("not scaled " + index.JointPosition (Finger.FingerJoint.JOINT_TIP).ToUnityScaled ());
+			//print ("scaled " + scaled_tip_position);
+
+
+			Vector3 scaled_pip_position =
+				Vector3.Scale(additional_movement, index.JointPosition (Finger.FingerJoint.JOINT_PIP).ToUnityScaled());
+
+			Vector3 scaled_mip_position =
+				Vector3.Scale(additional_movement, index.JointPosition (Finger.FingerJoint.JOINT_MCP).ToUnityScaled());
+
+
+
+
+			Points.Add (drawnShape.transform.InverseTransformPoint (handController.transform.TransformPoint(scaled_tip_position)- handController.transform.position));
+			Points.Add (drawnShape.transform.InverseTransformPoint (handController.transform.TransformPoint(scaled_pip_position)- handController.transform.position));
+			Points.Add (drawnShape.transform.InverseTransformPoint (handController.transform.TransformPoint(scaled_mip_position)- handController.transform.position));
+
+			//print (drawnShape.transform.InverseTransformPoint (handController.transform.TransformPoint(scaled_tip_position)));
+				/*
+			Points.Add (drawnShape.transform.InverseTransformPoint (handController.transform.TransformPoint( index.JointPosition (Finger.FingerJoint.JOINT_TIP).ToUnityScaled())));
+			Points.Add (drawnShape.transform.InverseTransformPoint (handController.transform.TransformPoint( index.JointPosition (Finger.FingerJoint.JOINT_PIP).ToUnityScaled())));
+            Points.Add (drawnShape.transform.InverseTransformPoint (handController.transform.TransformPoint( index.JointPosition (Finger.FingerJoint.JOINT_MCP).ToUnityScaled())));
+			*/
 			UpdateMesh ();
 
 
