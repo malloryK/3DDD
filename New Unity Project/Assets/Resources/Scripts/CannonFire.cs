@@ -3,6 +3,7 @@ using System.Collections;
 
 public class CannonFire : MonoBehaviour {
 	public ParticleSystem particles;
+	public float FIRE_POWER = 1.6f;
 	bool firing = false;
 
 	// Use this for initialization
@@ -28,7 +29,7 @@ public class CannonFire : MonoBehaviour {
 	IEnumerator WaitAndFire(){
 
 		yield return new WaitForSeconds(2.0f);
-		this.rigidbody.AddForce(transform.forward * 12, ForceMode.Impulse);
+		this.rigidbody.AddForce(transform.forward * FIRE_POWER, ForceMode.Impulse);
 
 		particles.Play ();
 

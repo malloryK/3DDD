@@ -137,8 +137,8 @@ public class DrawMesh : MonoBehaviour {
 		}
 		if (Input.GetKeyDown ("space")) { 	 	
 			if(drawnShape != null){
-				drawnShape.collider.isTrigger= false;
-				drawnShape.rigidbody.useGravity = true;
+				drawnShape.rigidbody.useGravity= true;
+
 			}
 
 		}
@@ -274,10 +274,6 @@ public class DrawMesh : MonoBehaviour {
 		drawnShape.AddComponent("Rigidbody");
 		drawnShape.rigidbody.useGravity = false;
 
-		drawnShape.collider.isTrigger = true;
-		//drawnShape.collider.isTrigger = false;
-
-		drawnShape.rigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 	}
 
 	public void UndoAction(){
@@ -330,7 +326,8 @@ public class DrawMesh : MonoBehaviour {
 			mesh.RecalculateBounds ();
 			MeshCollider meshCollider = drawnShape.GetComponent<MeshCollider>();
 
-			//meshCollider.sharedMesh = null;
+			meshCollider.sharedMesh = null;
+			meshCollider.convex = true;
 			meshCollider.sharedMesh = mesh;
 
 			drawnShape.renderer.material = mat;
