@@ -39,14 +39,15 @@ public class VoxelManager : MonoBehaviour {
 	//creates voxel in the grid where the tip is pointing
 	void CreateVoxel(Vector3 fingerTip){
 		Vector3 gridPosition = (fingerTip - gridOrigin)*5;
-		print (fingerTip);
-		print (gridOrigin);
-		print (gridPosition);
+		print ("finger tip, "+fingerTip);
+		print ("origin, "+gridOrigin);
+		print ("position in grid, "+gridPosition);
 		//ensure hand is within the bounding box
-		if (gridPosition != null && gridPosition.x <= DRAW_WIDTH && gridPosition.z <= DRAW_LENGTH && gridPosition.y <= DRAW_HEIGHT) {
+		if (gridPosition.x < DRAW_WIDTH && gridPosition.z < DRAW_HEIGHT && gridPosition.y < DRAW_LENGTH) {
 			Vector3 roundedGridPosition = new Vector3 ((int)Math.Round(gridPosition.x), (int)Math.Round(gridPosition.y), (int)Math.Round(gridPosition.z));
+			print ("position in grid rounded, "+ roundedGridPosition);
 			if(voxelGrid[(int)roundedGridPosition.x, (int)roundedGridPosition.y, (int)roundedGridPosition.z]==null){
-				Vector3 worldPosition = gridOrigin + new Vector3 (roundedGridPosition.x * 0.2f, roundedGridPosition.y * 0.2f, roundedGridPosition.z * 0.2f);
+				Vector3 worldPosition = gridOrigin + new Vector3 (roundedGridPosition.x * 0.2f, roundedGridPosition.z * 0.2f,roundedGridPosition.y * 0.2f);
 				voxelGrid [(int)roundedGridPosition.x, (int)roundedGridPosition.y, (int)roundedGridPosition.z] = (GameObject)Instantiate (voxel, worldPosition, voxel.transform.rotation);
 				voxelGrid [(int)roundedGridPosition.x, (int)roundedGridPosition.y, (int)roundedGridPosition.z].transform.parent = createdObject.transform;
 			}
