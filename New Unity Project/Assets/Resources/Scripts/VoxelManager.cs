@@ -8,13 +8,16 @@ public class VoxelManager : MonoBehaviour {
 	public HandController handController;
 	public GameObject drawingBox;
 	public GameObject voxel;
-
+	public int numberOfVoxelsAllowed = 10;
+	
 	int DRAW_WIDTH = 10;
 	int DRAW_LENGTH = 10;
 	int DRAW_HEIGHT = 5;
 	float MIN_HAND_CONFIDENCE = 0.1f;
-	Vector3 gridOrigin;
+	Vector3 localGridOrigin;
+	Vector3 globalGridOrigin;
 
+	int currentNumberOFVoxels = 0;
 	GameObject[,,] voxelGrid;
 	GameObject createdObject;
 	Hand rightHand;
@@ -23,37 +26,79 @@ public class VoxelManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		createdObject = new GameObject ();
+		createdObject.AddComponent<Rigidbody>();
+		createdObject.rigidbody.constraints = RigidbodyConstraints.FreezeAll ^ RigidbodyConstraints.FreezePositionY;
 		voxelGrid = new GameObject[DRAW_WIDTH,DRAW_LENGTH,DRAW_HEIGHT];
-		gridOrigin = drawingBox.transform.FindChild ("origin").transform.position;
+		localGridOrigin = drawingBox.transform.FindChild ("origin").transform.localPosition;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		SetHands ();
 		Vector3 gridPosition;
-		if (rightHand != null && IsPointing (rightHand)) {
-			CreateVoxel( IndexFingerTip (rightHand));
+		//pointng with index then create
+		if (rightHand != null && IsPointing (rightHand) && currentNumberOFVoxels<=numberOfVoxelsAllowed) {
+			if(SkeletalHand.RealTip != null){
+				CreateVoxel( SkeletalHand.RealTip.position);
+			}
+		//pointing with pinky then delete
+		}else if (rightHand != null && IsPinky (rightHand) && currentNumberOFVoxels>0) {
+			if(SkeletalHand.PinkyTip != null){
+				DeleteVoxel( SkeletalHand.PinkyTip.position);
+			}
 		}
+
+	}
+
+
+	void DeleteVoxel(Vector3 fingerTip){
+
+		Vector3 fingerPosInBox = drawingBox.transform.InverseTransformPoint (fingerTip);
+		Vector3 gridPosition = (fingerPosInBox - localGridOrigin)*10;
+		Vector3 roundedGridPosition = new Vector3 ((int)Math.Round(gridPosition.x), (int)Math.Round(gridPosition.y), (int)Math.Round(gridPosition.z));
+		if (roundedGridPosition.x < DRAW_WIDTH && roundedGridPosition.z < DRAW_HEIGHT && roundedGridPosition.y < DRAW_LENGTH 
+			&& roundedGridPosition.x > 0 && roundedGridPosition.z > 0 && roundedGridPosition.y > 0) {
+			
+			if (voxelGrid [(int)roundedGridPosition.x, (int)roundedGridPosition.y, (int)roundedGridPosition.z] != null) {
+				Destroy(voxelGrid [(int)roundedGridPosition.x, (int)roundedGridPosition.y, (int)roundedGridPosition.z]);
+				currentNumberOFVoxels--;
+			}
+		}
+
+
 	}
 
 	//creates voxel in the grid where the tip is pointing
 	void CreateVoxel(Vector3 fingerTip){
-		Vector3 gridPosition = (fingerTip - gridOrigin)*5;
-		print ("finger tip, "+fingerTip);
-		print ("origin, "+gridOrigin);
-		print ("position in grid, "+gridPosition);
-		//ensure hand is within the bounding box
-		if (gridPosition.x < DRAW_WIDTH && gridPosition.z < DRAW_HEIGHT && gridPosition.y < DRAW_LENGTH) {
-			Vector3 roundedGridPosition = new Vector3 ((int)Math.Round(gridPosition.x), (int)Math.Round(gridPosition.y), (int)Math.Round(gridPosition.z));
-			print ("position in grid rounded, "+ roundedGridPosition);
+
+		Vector3 fingerPosInBox = drawingBox.transform.InverseTransformPoint (fingerTip);
+		Vector3 gridPosition = (fingerPosInBox - localGridOrigin)*10;
+		Vector3 roundedGridPosition = new Vector3 ((int)Math.Round(gridPosition.x), (int)Math.Round(gridPosition.y), (int)Math.Round(gridPosition.z));
+
+		if (roundedGridPosition.x < DRAW_WIDTH && roundedGridPosition.z < DRAW_HEIGHT && roundedGridPosition.y < DRAW_LENGTH 
+		    && roundedGridPosition.x >0 && roundedGridPosition.z>0 && roundedGridPosition.y >0) {
+
 			if(voxelGrid[(int)roundedGridPosition.x, (int)roundedGridPosition.y, (int)roundedGridPosition.z]==null){
-				Vector3 worldPosition = gridOrigin + new Vector3 (roundedGridPosition.x * 0.2f, roundedGridPosition.z * 0.2f,roundedGridPosition.y * 0.2f);
+				currentNumberOFVoxels++;
+				Vector3 worldPosition = drawingBox.transform.TransformPoint(localGridOrigin + new Vector3 (roundedGridPosition.x * 0.1f,roundedGridPosition.y * 0.1f,roundedGridPosition.z * 0.1f));
+
 				voxelGrid [(int)roundedGridPosition.x, (int)roundedGridPosition.y, (int)roundedGridPosition.z] = (GameObject)Instantiate (voxel, worldPosition, voxel.transform.rotation);
 				voxelGrid [(int)roundedGridPosition.x, (int)roundedGridPosition.y, (int)roundedGridPosition.z].transform.parent = createdObject.transform;
 			}
 		}
 	}
 
+
+
+
+	bool IsPinky(Hand hand){
+		if (hand.Confidence > MIN_HAND_CONFIDENCE) {
+			return hand.Fingers [0].IsExtended == false && rightHand.Fingers [1].IsExtended == false && 
+				rightHand.Fingers [2].IsExtended == false && rightHand.Fingers [3].IsExtended == false && rightHand.Fingers [4].IsExtended == true;
+		} else {
+			return false;
+		}
+	}
 
 	//checks if hands index finger is the only one pointing
 	bool IsPointing(Hand hand){
@@ -63,12 +108,6 @@ public class VoxelManager : MonoBehaviour {
 		} else {
 			return false;
 		}
-	}
-
-	//Returns the hand index finger tip locatin in world coords
-	Vector3 IndexFingerTip(Hand hand){
-		Finger index = hand.Fingers [1];
-		return handController.transform.TransformPoint (index.TipPosition.ToUnityScaled ());
 	}
 
 	void SetHands(){

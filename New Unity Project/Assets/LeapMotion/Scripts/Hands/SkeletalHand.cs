@@ -11,6 +11,9 @@ using Leap;
 // The model for our skeletal hand made out of various polyhedra.
 public class SkeletalHand : HandModel {
 
+  public static Transform RealTip;
+	public static Transform PinkyTip;
+
   protected const float PALM_CENTER_OFFSET = 0.0150f;
 
   public GameObject palm;
@@ -18,6 +21,12 @@ public class SkeletalHand : HandModel {
   public GameObject wristJoint;
 
   void Start() {
+		Transform tip = transform.FindChild ("index/bone3/real_tip_position");
+		Transform pinky = transform.FindChild ("pinky/bone3/real_pinky_tip");
+		if (tip != null)
+			RealTip = tip;
+		if (pinky != null)
+			PinkyTip = pinky;
     // Ignore collisions with self.
     Leap.Utils.IgnoreCollisions(gameObject, gameObject);
   }

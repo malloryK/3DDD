@@ -131,6 +131,7 @@
      <Compile Include="Assets\Resources\Scripts\DrawMesh.cs" />
      <Compile Include="Assets\Resources\Scripts\UndoScript.cs" />
      <Compile Include="Assets\Resources\Scripts\VoxelManager.cs" />
+     <Compile Include="Assets\StateManager.cs" />
      <None Include="Assets\LeapMotion\Resources\LeapIRUndistorted.shader" />
      <None Include="Assets\Plugins\donotdelete.txt" />
      <None Include="Assets\LeapMotion\Materials\Sources\Shaders\Toony-Basic.shader" />
