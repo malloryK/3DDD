@@ -3,35 +3,27 @@ using System.Collections;
 
 public class CannonFire : MonoBehaviour {
 	public ParticleSystem particles;
-	public float FIRE_POWER = 1.6f;
-	bool firing = false;
-	bool hasFired = false;
+	public float FirePower = 1.6f;
+	public float DelayInSec = 1;
+
+	GameManager GM;
+
 	// Use this for initialization
 	void Start () {
-	
+		GM = GameManager.Instance;
+		GM.OnStateChange += HandleOnStateChange();
 	}
-	
-	// Update is called once per frame
-	void Update () {
 
-		if (Input.GetKeyUp ("space") == true && hasFired == false) {
-			firing = true;
-			hasFired = true;
-		}
-	
-		if (firing) {
-
+	void HandleOnStateChange(){
+		if(GM.gameState == GameState.Firing){
 			StartCoroutine(WaitAndFire());
-			firing = false;
-
 		}
 	}
-
+	
 	IEnumerator WaitAndFire(){
 
-		yield return new WaitForSeconds(2.0f);
-		this.rigidbody.AddForce(transform.forward * FIRE_POWER, ForceMode.Impulse);
-
+		yield return new WaitForSeconds(DelayInSec);
+		this.rigidbody.AddForce(transform.forward * FirePower, ForceMode.Impulse);
 		particles.Play ();
 
 	}

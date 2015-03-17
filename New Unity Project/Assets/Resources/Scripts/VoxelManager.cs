@@ -5,11 +5,14 @@ using Leap;
 
 public class VoxelManager : MonoBehaviour {
 
+
 	public HandController handController;
 	public GameObject drawingBox;
 	public GameObject voxel;
 	public int numberOfVoxelsAllowed = 10;
-	
+
+	GameManager GM;
+
 	int DRAW_WIDTH = 10;
 	int DRAW_LENGTH = 10;
 	int DRAW_HEIGHT = 5;
@@ -25,29 +28,40 @@ public class VoxelManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		GM = GameManager.Instance;
+		GM.OnStateChange+= HandleOnStateChange;
+		GM.SetGameState (GameState.Drawing);
 		createdObject = new GameObject ();
 		createdObject.AddComponent<Rigidbody>();
-		createdObject.rigidbody.constraints = RigidbodyConstraints.FreezeAll ^ RigidbodyConstraints.FreezePositionY;
+		createdObject.rigidbody.constraints = RigidbodyConstraints.FreezeAll;
 		voxelGrid = new GameObject[DRAW_WIDTH,DRAW_LENGTH,DRAW_HEIGHT];
 		localGridOrigin = drawingBox.transform.FindChild ("origin").transform.localPosition;
+	}
+
+	void HandleOnStateChange () {
+		if (GM.gameState == GameState.Firing) {
+			drawingBox.SetActive(false);
+			createdObject.rigidbody.constraints = RigidbodyConstraints.FreezeAll ^ RigidbodyConstraints.FreezePositionY;
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		SetHands ();
-		Vector3 gridPosition;
-		//pointng with index then create
-		if (rightHand != null && IsPointing (rightHand) && currentNumberOFVoxels<=numberOfVoxelsAllowed) {
-			if(SkeletalHand.RealTip != null){
-				CreateVoxel( SkeletalHand.RealTip.position);
-			}
-		//pointing with pinky then delete
-		}else if (rightHand != null && IsPinky (rightHand) && currentNumberOFVoxels>0) {
-			if(SkeletalHand.PinkyTip != null){
-				DeleteVoxel( SkeletalHand.PinkyTip.position);
+		if (GM.gameState == GameState.Drawing) {
+			Vector3 gridPosition;
+			//pointng with index then create
+			if (rightHand != null && IsPointing (rightHand) && currentNumberOFVoxels <= numberOfVoxelsAllowed) {
+				if (SkeletalHand.RealTip != null) {
+					CreateVoxel (SkeletalHand.RealTip.position);
+				}
+				//pointing with pinky then delete
+			} else if (rightHand != null && IsPinky (rightHand) && currentNumberOFVoxels > 0) {
+				if (SkeletalHand.PinkyTip != null) {
+					DeleteVoxel (SkeletalHand.PinkyTip.position);
+				}
 			}
 		}
-
 	}
 
 
@@ -111,6 +125,7 @@ public class VoxelManager : MonoBehaviour {
 	}
 
 	void SetHands(){
+
 		//get hands 
 		rightHand = handController.GetFrame().Hands.Rightmost;	
 		leftHand = handController.GetFrame().Hands.Leftmost;
