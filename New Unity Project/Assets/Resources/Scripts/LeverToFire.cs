@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TriggerFiring : MonoBehaviour {
+public class LeverToFire : MonoBehaviour {
+
 
 	GameManager GM;
 
@@ -14,7 +15,8 @@ public class TriggerFiring : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//this if statement will be replaced by the lever trigger.
-		if(Input.GetKeyDown(KeyCode.D)){
+		if(Input.GetKeyDown(KeyCode.D)&& GM.gameState != GameState.Firing){
+
 			GM.SetGameState(GameState.Firing);
 		}
 	}

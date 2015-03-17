@@ -11,20 +11,23 @@ public class CannonFire : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		GM = GameManager.Instance;
-		GM.OnStateChange += HandleOnStateChange();
+		GM.OnStateChange += HandleOnStateChange;
+		this.rigidbody.useGravity = false;
 	}
 
 	void HandleOnStateChange(){
-		if(GM.gameState == GameState.Firing){
+
+		if(GM.gameState == GameState.Firing ){
 			StartCoroutine(WaitAndFire());
 		}
 	}
-	
+	//TODO: find a better way to call the coroutine once.
 	IEnumerator WaitAndFire(){
 
-		yield return new WaitForSeconds(DelayInSec);
-		this.rigidbody.AddForce(transform.forward * FirePower, ForceMode.Impulse);
-		particles.Play ();
+			yield return new WaitForSeconds (DelayInSec);
+		this.rigidbody.useGravity = true;
+			this.rigidbody.AddForce (transform.forward * FirePower, ForceMode.Impulse);
+			particles.Play ();
 
 	}
 }

@@ -130,7 +130,8 @@
      <Compile Include="Assets\Resources\Scripts\CannonFire.cs" />
      <Compile Include="Assets\Resources\Scripts\DrawMesh.cs" />
      <Compile Include="Assets\Resources\Scripts\GameManager.cs" />
-     <Compile Include="Assets\Resources\Scripts\TriggerFiring.cs" />
+     <Compile Include="Assets\Resources\Scripts\LevelMovement.cs" />
+     <Compile Include="Assets\Resources\Scripts\LeverToFire.cs" />
      <Compile Include="Assets\Resources\Scripts\VoxelManager.cs" />
      <None Include="Assets\LeapMotion\Resources\LeapIRUndistorted.shader" />
      <None Include="Assets\Plugins\donotdelete.txt" />
