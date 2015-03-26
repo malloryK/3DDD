@@ -132,11 +132,13 @@
      <Compile Include="Assets\Resources\Scripts\CannonFire.cs" />
      <Compile Include="Assets\Resources\Scripts\DrawMesh.cs" />
      <Compile Include="Assets\Resources\Scripts\GameManager.cs" />
+     <Compile Include="Assets\Resources\Scripts\LevelGameObjects.cs" />
      <Compile Include="Assets\Resources\Scripts\LevelMovement.cs" />
      <Compile Include="Assets\Resources\Scripts\LeverToFire.cs" />
      <Compile Include="Assets\Resources\Scripts\Lines.cs" />
      <Compile Include="Assets\Resources\Scripts\VoxelManager.cs" />
      <Compile Include="Assets\Resources\Scripts\VoxelShadowManager.cs" />
+     <Compile Include="Assets\Resources\Scripts\WinLoseCheck.cs" />
      <None Include="Assets\LeapMotion\Resources\LeapIRUndistorted.shader" />
      <None Include="Assets\Plugins\donotdelete.txt" />
      <None Include="Assets\LeapMotion\Materials\Sources\Shaders\Toony-Basic.shader" />

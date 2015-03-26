@@ -2,7 +2,7 @@
 using System.Collections;
 
 
-public enum GameState { NullState, MainMenu, Drawing, Firing, Win, Lose }
+public enum GameState { NullState, Drawing, Firing, Win, Lose }
 public delegate void OnStateChangeHandler();
 
 public class GameManager {

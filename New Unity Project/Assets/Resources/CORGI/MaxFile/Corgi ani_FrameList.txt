@@ -1,0 +1,23 @@
+
+
+Max file 
+
+Corgi animation frame
+
+
+
+
+
+0-60 idle
+
+70-106 Walk
+
+120-136 Run
+
+140- 194 Jump
+
+200-228 Attack
+
+240-276 Pain
+
+280-340 Dead

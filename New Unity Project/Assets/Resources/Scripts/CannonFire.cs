@@ -5,6 +5,7 @@ public class CannonFire : MonoBehaviour {
 	public ParticleSystem particles;
 	public float FirePower = 1.6f;
 	public float DelayInSec = 1;
+	public bool fired = false;
 
 	GameManager GM;
 
@@ -25,7 +26,7 @@ public class CannonFire : MonoBehaviour {
 	IEnumerator WaitAndFire(){
 
 			yield return new WaitForSeconds (DelayInSec);
-		this.rigidbody.useGravity = true;
+			this.rigidbody.useGravity = true;
 			this.rigidbody.AddForce (transform.forward * FirePower, ForceMode.Impulse);
 			particles.Play ();
 
