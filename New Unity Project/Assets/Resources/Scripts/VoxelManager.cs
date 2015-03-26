@@ -11,6 +11,7 @@ public class VoxelManager : MonoBehaviour {
 	public GameObject voxel;
 	public int numberOfVoxelsAllowed = 10;
 
+	VoxelShadowManager VM;
 	GameManager GM;
 
 	int DRAW_WIDTH = 10;
@@ -28,6 +29,7 @@ public class VoxelManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		VM = VoxelShadowManager.Instance;
 		GM = GameManager.Instance;
 		GM.OnStateChange+= HandleOnStateChange;
 		GM.SetGameState (GameState.Drawing);
@@ -45,13 +47,14 @@ public class VoxelManager : MonoBehaviour {
 		}
 	}
 	
+
 	// Update is called once per frame
 	void Update () {
 		SetHands ();
 		if (GM.gameState == GameState.Drawing) {
 			Vector3 gridPosition;
 			//pointng with index then create
-			if (rightHand != null && IsPointing (rightHand) && currentNumberOFVoxels <= numberOfVoxelsAllowed) {
+			if (rightHand != null && IsPointing (rightHand) && currentNumberOFVoxels <= numberOfVoxelsAllowed ) {
 				if (SkeletalHand.RealTip != null) {
 					CreateVoxel (SkeletalHand.RealTip.position);
 				}
@@ -75,6 +78,18 @@ public class VoxelManager : MonoBehaviour {
 			
 			if (voxelGrid [(int)roundedGridPosition.x, (int)roundedGridPosition.y, (int)roundedGridPosition.z] != null) {
 				Destroy(voxelGrid [(int)roundedGridPosition.x, (int)roundedGridPosition.y, (int)roundedGridPosition.z]);
+				voxelGrid[(int)roundedGridPosition.x, (int)roundedGridPosition.y, (int)roundedGridPosition.z] = null;
+
+				bool emptyColumn = true;
+				for (int i = 0; i < DRAW_HEIGHT; i ++){
+					if (voxelGrid[(int)roundedGridPosition.x, (int)roundedGridPosition.y, i] != null){
+						emptyColumn = false;
+					}
+				}
+
+				if (emptyColumn){
+					VM.ChangeShadowState(new Vector2((int)roundedGridPosition.x, (int) roundedGridPosition.y), false);
+				}
 				currentNumberOFVoxels--;
 			}
 		}
@@ -95,7 +110,7 @@ public class VoxelManager : MonoBehaviour {
 			if(voxelGrid[(int)roundedGridPosition.x, (int)roundedGridPosition.y, (int)roundedGridPosition.z]==null){
 				currentNumberOFVoxels++;
 				Vector3 worldPosition = drawingBox.transform.TransformPoint(localGridOrigin + new Vector3 (roundedGridPosition.x * 0.1f,roundedGridPosition.y * 0.1f,roundedGridPosition.z * 0.1f));
-
+				VM.ChangeShadowState(new Vector2((int)roundedGridPosition.x, (int) roundedGridPosition.y), true);
 				voxelGrid [(int)roundedGridPosition.x, (int)roundedGridPosition.y, (int)roundedGridPosition.z] = (GameObject)Instantiate (voxel, worldPosition, voxel.transform.rotation);
 				voxelGrid [(int)roundedGridPosition.x, (int)roundedGridPosition.y, (int)roundedGridPosition.z].transform.parent = createdObject.transform;
 			}

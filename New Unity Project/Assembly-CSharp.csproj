@@ -133,6 +133,7 @@
      <Compile Include="Assets\Resources\Scripts\LevelMovement.cs" />
      <Compile Include="Assets\Resources\Scripts\LeverToFire.cs" />
      <Compile Include="Assets\Resources\Scripts\VoxelManager.cs" />
+     <Compile Include="Assets\VoxelShadowManager.cs" />
      <None Include="Assets\LeapMotion\Resources\LeapIRUndistorted.shader" />
      <None Include="Assets\Plugins\donotdelete.txt" />
      <None Include="Assets\LeapMotion\Materials\Sources\Shaders\Toony-Basic.shader" />
