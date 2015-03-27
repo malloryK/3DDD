@@ -16,18 +16,23 @@ public class CannonFire : MonoBehaviour {
 		this.rigidbody.useGravity = false;
 	}
 
+	void OnDestroy () {
+		GM.OnStateChange -= HandleOnStateChange;
+	}
+
 	void HandleOnStateChange(){
 
 		if(GM.gameState == GameState.Firing ){
 			StartCoroutine(WaitAndFire());
 		}
 	}
-	//TODO: find a better way to call the coroutine once.
+
 	IEnumerator WaitAndFire(){
 
 			yield return new WaitForSeconds (DelayInSec);
 			this.rigidbody.useGravity = true;
 			this.rigidbody.AddForce (transform.forward * FirePower, ForceMode.Impulse);
+			fired = true;
 			particles.Play ();
 
 	}

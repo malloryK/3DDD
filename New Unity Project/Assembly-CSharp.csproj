@@ -111,6 +111,7 @@
      <Compile Include="Assets\LeapMotion\Scripts\Utils\StretchToScreen.cs" />
      <Compile Include="Assets\LeapMotion\Scripts\Utils\TriggerDrawing.cs" />
      <Compile Include="Assets\LeapMotion\Scripts\Utils\Utils.cs" />
+     <Compile Include="Assets\LevelSwitch.cs" />
      <Compile Include="Assets\OVR\Scripts\OVRCameraRig.cs" />
      <Compile Include="Assets\OVR\Scripts\OVRCommon.cs" />
      <Compile Include="Assets\OVR\Scripts\OVRDisplay.cs" />
@@ -130,6 +131,7 @@
      <Compile Include="Assets\Resources\CORGI\Script\ButtonCtrl.cs" />
      <Compile Include="Assets\Resources\CORGI\Script\Rotate.cs" />
      <Compile Include="Assets\Resources\Scripts\CannonFire.cs" />
+     <Compile Include="Assets\Resources\Scripts\Corgi.cs" />
      <Compile Include="Assets\Resources\Scripts\DrawMesh.cs" />
      <Compile Include="Assets\Resources\Scripts\GameManager.cs" />
      <Compile Include="Assets\Resources\Scripts\LevelGameObjects.cs" />
@@ -138,7 +140,6 @@
      <Compile Include="Assets\Resources\Scripts\Lines.cs" />
      <Compile Include="Assets\Resources\Scripts\VoxelManager.cs" />
      <Compile Include="Assets\Resources\Scripts\VoxelShadowManager.cs" />
-     <Compile Include="Assets\Resources\Scripts\WinLoseCheck.cs" />
      <None Include="Assets\LeapMotion\Resources\LeapIRUndistorted.shader" />
      <None Include="Assets\Plugins\donotdelete.txt" />
      <None Include="Assets\LeapMotion\Materials\Sources\Shaders\Toony-Basic.shader" />
@@ -146,6 +147,7 @@
      <None Include="Assets\InsideBoxGrid.shader" />
      <None Include="Assets\LeapMotion\Resources\LeapRGBDistorted.shader" />
      <None Include="Assets\Plugins\x86_64\donotdelete.txt" />
+     <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
      <None Include="Assets\Resources\CORGI\MaxFile\Corgi ani_FrameList.txt" />
      <None Include="Assets\LeapMotion\InteractionUtils (alpha)\readme.txt" />
      <None Include="Assets\LeapMotion\Resources\LeapIRUndistorted_foreground.shader" />
@@ -167,6 +169,10 @@
  <Reference Include="LeapCSharp.NET3.5">
  <HintPath>C:/Users/Equis/Documents/GitHub/3DDD/New Unity Project/Assets/Plugins/x86_64/LeapCSharp.NET3.5.dll</HintPath>
  </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-UnityScript-firstpass.unityproj">
+      <Project>{C62E21C4-7CD8-5581-1E66-AC8E36219989}</Project>      <Name>Assembly-UnityScript-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

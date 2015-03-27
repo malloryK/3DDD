@@ -55,12 +55,12 @@
      <None Include="Assets\LeapMotion\Resources\LeapRGBDistorted.shader" />
      <None Include="Assets\Plugins\x86_64\donotdelete.txt" />
      <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
+     <None Include="Assets\Resources\CORGI\MaxFile\Corgi ani_FrameList.txt" />
      <None Include="Assets\LeapMotion\InteractionUtils (alpha)\readme.txt" />
      <None Include="Assets\LeapMotion\Resources\LeapIRUndistorted_foreground.shader" />
      <None Include="Assets\LeapMotion\DemoResources\ScrollerText.txt" />
      <None Include="Assets\LeapMotion\readme.txt" />
      <None Include="Assets\OVR\Shaders\TextShader3D.shader" />
-     <None Include="Assets\Standard Assets\Skyboxes\_skybox info.txt" />
      <None Include="Assets\LeapMotion\Shaders\RimShading.shader" />
      <None Include="Assets\Box.shader" />
      <None Include="Assets\LeapMotion\Materials\Sources\Shaders\Toony-BasicOutline.shader" />
