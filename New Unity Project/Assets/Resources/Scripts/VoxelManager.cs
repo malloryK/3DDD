@@ -44,6 +44,14 @@ public class VoxelManager : MonoBehaviour {
 		if (GM.gameState == GameState.Firing) {
 			drawingBox.SetActive(false);
 			createdObject.rigidbody.constraints = RigidbodyConstraints.FreezeAll ^ RigidbodyConstraints.FreezePositionY;
+		}else if(GM.gameState == GameState.Drawing){
+			drawingBox.SetActive(true);
+			Destroy(createdObject);
+			currentNumberOFVoxels = 0;
+			createdObject = new GameObject ();
+			createdObject.AddComponent<Rigidbody>();
+			createdObject.rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+			voxelGrid = new GameObject[DRAW_WIDTH,DRAW_LENGTH,DRAW_HEIGHT];
 		}
 	}
 	
@@ -148,8 +156,7 @@ public class VoxelManager : MonoBehaviour {
 		Hand temp = null;
 		if (!rightHand.IsRight) {
 			temp = rightHand;
-			rightHand = null;
-			
+			rightHand = null;			
 		} 
 		if (!leftHand.IsLeft) {
 			rightHand = leftHand;

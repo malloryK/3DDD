@@ -111,7 +111,6 @@
      <Compile Include="Assets\LeapMotion\Scripts\Utils\StretchToScreen.cs" />
      <Compile Include="Assets\LeapMotion\Scripts\Utils\TriggerDrawing.cs" />
      <Compile Include="Assets\LeapMotion\Scripts\Utils\Utils.cs" />
-     <Compile Include="Assets\LevelSwitch.cs" />
      <Compile Include="Assets\OVR\Scripts\OVRCameraRig.cs" />
      <Compile Include="Assets\OVR\Scripts\OVRCommon.cs" />
      <Compile Include="Assets\OVR\Scripts\OVRDisplay.cs" />
@@ -135,9 +134,10 @@
      <Compile Include="Assets\Resources\Scripts\DrawMesh.cs" />
      <Compile Include="Assets\Resources\Scripts\GameManager.cs" />
      <Compile Include="Assets\Resources\Scripts\LevelGameObjects.cs" />
+     <Compile Include="Assets\Resources\Scripts\LevelManager.cs" />
      <Compile Include="Assets\Resources\Scripts\LevelMovement.cs" />
      <Compile Include="Assets\Resources\Scripts\LeverToFire.cs" />
-     <Compile Include="Assets\Resources\Scripts\Lines.cs" />
+     <Compile Include="Assets\Resources\Scripts\LoadLevel.cs" />
      <Compile Include="Assets\Resources\Scripts\VoxelManager.cs" />
      <Compile Include="Assets\Resources\Scripts\VoxelShadowManager.cs" />
      <None Include="Assets\LeapMotion\Resources\LeapIRUndistorted.shader" />

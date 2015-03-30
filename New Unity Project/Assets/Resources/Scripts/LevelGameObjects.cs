@@ -36,7 +36,6 @@ public class LevelGameObjects : MonoBehaviour {
 		yield return new WaitForSeconds (2);
 		if(GM.gameState != GameState.Lose){
 			GM.SetGameState(GameState.Win);
-			print ("win");
 		}
 		yield return null;
 			

@@ -17,9 +17,20 @@ public class VoxelShadowManager : MonoBehaviour {
 		get {
 			if (_instance == null) {
 				_instance = FindObjectOfType<VoxelShadowManager>();
+				GameManager.Instance.OnStateChange += HandleOnStateChange;
 			}  
 			return _instance;
 		} 
+	}
+
+	static void HandleOnStateChange ()
+	{
+		if(GameManager.Instance.gameState == GameState.Drawing){
+			foreach (GameObject go in _instance.shadowList){
+				Destroy(go);
+			}
+			_instance.shadowList = new GameObject[10,10];
+		}
 	}
 	
 	public void ChangeShadowState(Vector2 shadowPosition, bool create) {

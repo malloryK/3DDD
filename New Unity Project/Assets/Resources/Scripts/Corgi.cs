@@ -14,13 +14,20 @@ public class Corgi : MonoBehaviour {
 		if(GM.gameState == GameState.Lose){
 			StartCoroutine(PlayLose());
 		}else if(GM.gameState == GameState.Win){
+
 			StartCoroutine(PlayWin());
+
+		}else if(GM.gameState == GameState.Drawing){
+			animation.Play("0_idle");
 		}
 	}
 
 	IEnumerator PlayWin(){
+		GameObject particles = this.gameObject.transform.FindChild ("Hips/Particle System").gameObject;
 		animation.Play ("2_Run");
+		particles.SetActive(true);
 		yield return new WaitForSeconds (.25f);
+
 		animation.Play ("3_Jump");
 	}
 

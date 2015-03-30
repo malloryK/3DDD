@@ -12,12 +12,15 @@ public class LeverToFire : MonoBehaviour {
 	
 	}
 
-	// Update is called once per frame
-	void Update () {
-		//this if statement will be replaced by the lever trigger.
-		if(Input.GetKeyDown(KeyCode.D)&& GM.gameState != GameState.Firing){
-
-			GM.SetGameState(GameState.Firing);
+	void OnTriggerEnter(Collider other){
+		GetComponent<Animator> ().SetBool ("Bounce", true);
+		if (GM.gameState == GameState.Drawing) {
+			
+			GM.SetGameState (GameState.Firing);
 		}
+	}
+
+	void OnTriggerEnter(){
+		GetComponent<Animator> ().SetBool ("Bounce", false);
 	}
 }
