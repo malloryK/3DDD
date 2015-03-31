@@ -9,6 +9,9 @@ public class VoxelShadowManager : MonoBehaviour {
 	public GameObject origin;
 	public GameObject Shadow;
 	public GameObject AllShadows;
+	public GameObject floor;
+
+	private Vector3 localGridOrigin;
 	float SCALE = 0.2f;
 	GameObject[,] shadowList = new GameObject[10,10];
 
@@ -18,6 +21,8 @@ public class VoxelShadowManager : MonoBehaviour {
 			if (_instance == null) {
 				_instance = FindObjectOfType<VoxelShadowManager>();
 				GameManager.Instance.OnStateChange += HandleOnStateChange;
+				_instance.AllShadows.transform.parent = GameObject.FindGameObjectWithTag("Moving").transform;
+				_instance.localGridOrigin = _instance.floor.transform.FindChild ("origin").transform.localPosition;
 			}  
 			return _instance;
 		} 
@@ -36,8 +41,12 @@ public class VoxelShadowManager : MonoBehaviour {
 	public void ChangeShadowState(Vector2 shadowPosition, bool create) {
 
 		if (shadowList [(int)shadowPosition.x, (int)shadowPosition.y] == null && create) {
-			shadowList[(int)shadowPosition.x,(int)shadowPosition.y] = (GameObject)Instantiate (Shadow, origin.transform.position+(new Vector3(shadowPosition.x,0.001f,  -shadowPosition.y )*SCALE), Shadow.transform.rotation);
+			Vector3 worldPosition = floor.transform.TransformPoint(localGridOrigin + new Vector3 (shadowPosition.x * 0.1f,0.001f,-shadowPosition.y * 0.1f));
+
+			shadowList[(int)shadowPosition.x,(int)shadowPosition.y] = (GameObject)Instantiate (Shadow, worldPosition,Quaternion.identity);
 			shadowList[(int)shadowPosition.x,(int)shadowPosition.y].transform.parent = AllShadows.transform;
+			shadowList[(int)shadowPosition.x,(int)shadowPosition.y].transform.localRotation = Shadow.transform.rotation;
+
 		}
 		if (shadowList [(int)shadowPosition.x, (int)shadowPosition.y] != null && !create) {
 				Destroy (shadowList[(int)shadowPosition.x,(int)shadowPosition.y]);

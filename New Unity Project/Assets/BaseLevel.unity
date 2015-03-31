@@ -231,6 +231,7 @@ MonoBehaviour:
   origin: {fileID: 126892458}
   Shadow: {fileID: 100000, guid: 7280a272ed7e54647a211a4a2ee79ea7, type: 2}
   AllShadows: {fileID: 2094742584}
+  floor: {fileID: 39198460}
 --- !u!1 &54260564
 GameObject:
   m_ObjectHideFlags: 0
@@ -2191,7 +2192,7 @@ Transform:
   m_PrefabParentObject: {fileID: 400034, guid: 22b0104536453e245848dc44b5dbc0d8, type: 3}
   m_PrefabInternal: {fileID: 1577584214}
   m_GameObject: {fileID: 657354222}
-  m_LocalRotation: {x: .00859284494, y: .0125054894, z: -.823725641, w: .566785634}
+  m_LocalRotation: {x: .00859284401, y: .0125054885, z: -.823725581, w: .566785574}
   m_LocalPosition: {x: -.0270098671, y: .0627206787, z: -.00134876254}
   m_LocalScale: {x: 1.00000024, y: 1.00000024, z: 1.00000012}
   m_Children: []
@@ -2882,8 +2883,8 @@ SkinnedMeshRenderer:
   m_BlendShapeWeights: []
   m_RootBone: {fileID: 1619405918}
   m_AABB:
-    m_Center: {x: .000503361225, y: -.0185594112, z: .27667433}
-    m_Extent: {x: .394591123, y: .22595799, z: .498115838}
+    m_Center: {x: .000503376126, y: -.0185594484, z: .2766743}
+    m_Extent: {x: .394591033, y: .22595799, z: .498115808}
   m_DirtyAABB: 0
 --- !u!1 &1002284573
 GameObject:
