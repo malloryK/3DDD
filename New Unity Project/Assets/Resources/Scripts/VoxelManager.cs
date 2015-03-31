@@ -43,7 +43,7 @@ public class VoxelManager : MonoBehaviour {
 	void HandleOnStateChange () {
 		if (GM.gameState == GameState.Firing) {
 			drawingBox.SetActive(false);
-			createdObject.rigidbody.constraints = RigidbodyConstraints.FreezeAll ^ RigidbodyConstraints.FreezePositionY;
+			createdObject.rigidbody.constraints = (RigidbodyConstraints.FreezeAll ^ RigidbodyConstraints.FreezePositionY )^RigidbodyConstraints.FreezeRotationY;
 		}else if(GM.gameState == GameState.Drawing){
 			drawingBox.SetActive(true);
 			Destroy(createdObject);

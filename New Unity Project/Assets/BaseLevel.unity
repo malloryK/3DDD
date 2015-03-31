@@ -758,6 +758,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: b5ee9ecc3483245409ce06000bb1532b, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b5ee9ecc3483245409ce06000bb1532b, type: 2}
   m_RootGameObject: {fileID: 461836563}
@@ -1045,11 +1049,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: 3396c6816a092d647a68cbaade7c78bd, type: 2}
       propertyPath: m_LocalRotation.y
-      value: .382683486
+      value: .381227225
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: 3396c6816a092d647a68cbaade7c78bd, type: 2}
       propertyPath: m_LocalRotation.w
-      value: .923879564
+      value: .920363903
       objectReference: {fileID: 0}
     - target: {fileID: 11400010, guid: 3396c6816a092d647a68cbaade7c78bd, type: 2}
       propertyPath: handMovementScale.x
@@ -1074,6 +1078,14 @@ Prefab:
     - target: {fileID: 400012, guid: 3396c6816a092d647a68cbaade7c78bd, type: 2}
       propertyPath: m_LocalScale.z
       value: 1.54999995
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: 3396c6816a092d647a68cbaade7c78bd, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: .0805213973
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: 3396c6816a092d647a68cbaade7c78bd, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: -.0333530605
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3396c6816a092d647a68cbaade7c78bd, type: 2}
@@ -2747,7 +2759,7 @@ Transform:
   m_PrefabParentObject: {fileID: 400006, guid: 3396c6816a092d647a68cbaade7c78bd, type: 2}
   m_PrefabInternal: {fileID: 534844948}
   m_GameObject: {fileID: 951199958}
-  m_LocalRotation: {x: 0, y: .382683486, z: 0, w: .923879564}
+  m_LocalRotation: {x: .0805213973, y: .381227225, z: -.0333530605, w: .920363903}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -5601,6 +5613,10 @@ Prefab:
     - target: {fileID: 100000, guid: aad759068fc701d40bd2bfc8cc741934, type: 3}
       propertyPath: m_TagString
       value: DrawBox
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: aad759068fc701d40bd2bfc8cc741934, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: aad759068fc701d40bd2bfc8cc741934, type: 3}

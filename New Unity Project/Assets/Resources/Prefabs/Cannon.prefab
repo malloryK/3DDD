@@ -261,6 +261,7 @@ MonoBehaviour:
   particles: {fileID: 19800000}
   FirePower: 1
   DelayInSec: 5
+  fired: 0
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
