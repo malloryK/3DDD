@@ -3,6 +3,9 @@ using System.Collections;
 
 public class LeverToFire : MonoBehaviour {
 
+	public AudioSource grow;
+	public AudioSource hover;
+
 
 	GameManager GM;
 
@@ -13,6 +16,7 @@ public class LeverToFire : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other){
+
 		GetComponent<Animator> ().SetBool ("Bounce", true);
 		if (GM.gameState == GameState.Drawing) {
 			
@@ -20,7 +24,24 @@ public class LeverToFire : MonoBehaviour {
 		}
 	}
 
-	void OnTriggerEnter(){
+	void OnTriggerExit(Collider other){
 		GetComponent<Animator> ().SetBool ("Bounce", false);
+	}
+
+	void PlayGrowSound(){
+		this.grow.Play();
+	}
+	
+	void PlayHoverSound(){
+		if (!this.hover.isPlaying) {
+			this.hover.Play ();
+		}
+	}
+	
+	void PlayShrinkSound(){
+		if (this.hover.isPlaying) {
+			this.hover.Stop();
+		}
+		this.grow.Play ();
 	}
 }

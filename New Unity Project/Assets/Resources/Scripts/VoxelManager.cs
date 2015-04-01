@@ -17,7 +17,7 @@ public class VoxelManager : MonoBehaviour {
 	static int DRAW_WIDTH = 10;
 	static int DRAW_LENGTH = 10;
 	static int DRAW_HEIGHT = 5;
-	float MIN_HAND_CONFIDENCE = 0.1f;
+	float MIN_HAND_CONFIDENCE = 0.2f;
 	Vector3 localGridOrigin;
 	Vector3 globalGridOrigin;
 	
@@ -44,6 +44,7 @@ public class VoxelManager : MonoBehaviour {
 		createdObject.transform.parent = GameObject.FindGameObjectWithTag("Moving").transform;
 		createdObject.AddComponent<Rigidbody>();
 		createdObject.rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+		createdObject.tag = "Voxel";
 		voxelGrid = new GameObject[DRAW_WIDTH,DRAW_LENGTH,DRAW_HEIGHT];
 		localGridOrigin = drawingBox.transform.FindChild ("origin").transform.localPosition;
 	}
@@ -59,6 +60,9 @@ public class VoxelManager : MonoBehaviour {
 			createdObject = new GameObject ();
 			createdObject.AddComponent<Rigidbody>();
 			createdObject.rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+			createdObject.transform.parent = GameObject.FindGameObjectWithTag("Moving").transform;
+			createdObject.transform.localRotation = Quaternion.identity;
+			createdObject.tag="Voxel";
 			voxelGrid = new GameObject[DRAW_WIDTH,DRAW_LENGTH,DRAW_HEIGHT];
 		}
 	}
@@ -93,7 +97,7 @@ public class VoxelManager : MonoBehaviour {
 		    && roundedGridPosition.x > 0 && roundedGridPosition.z > 0 && roundedGridPosition.y > 0) {
 			
 			if (voxelGrid [(int)roundedGridPosition.x, (int)roundedGridPosition.y, (int)roundedGridPosition.z] != null  && canDeleteVoxel(roundedGridPosition)) {
-
+				//voxelGrid [(int)roundedGridPosition.x, (int)roundedGridPosition.y, (int)roundedGridPosition.z].audio.Play();
 				Destroy(voxelGrid [(int)roundedGridPosition.x, (int)roundedGridPosition.y, (int)roundedGridPosition.z]);
 				voxelGrid[(int)roundedGridPosition.x, (int)roundedGridPosition.y, (int)roundedGridPosition.z] = null;
 				
@@ -125,7 +129,7 @@ public class VoxelManager : MonoBehaviour {
 		if (roundedGridPosition.x < DRAW_WIDTH && roundedGridPosition.z < DRAW_HEIGHT && roundedGridPosition.y < DRAW_LENGTH 
 		    && roundedGridPosition.x >0 && roundedGridPosition.z>0 && roundedGridPosition.y >0) {
 			
-			//no current voxel exists
+			//no current voxel existsObject
 			if(voxelGrid[(int)roundedGridPosition.x, (int)roundedGridPosition.y, (int)roundedGridPosition.z]==null && canCreateVoxel (roundedGridPosition)){
 				currentNumberOFVoxels++;
 				Vector3 worldPosition = drawingBox.transform.TransformPoint(localGridOrigin + new Vector3 (roundedGridPosition.x * 0.1f,roundedGridPosition.y * 0.1f,roundedGridPosition.z * 0.1f));
@@ -367,13 +371,7 @@ public class VoxelManager : MonoBehaviour {
 		
 		//after all the regions grown, compare them and if they are the same, then allow deletion
 
-		for (int i = 0; i < 6; i++) {
 
-			Debug.Log (regionsMinMax[i, 0] + " " + regionsMinMax[i, 1]);
-			//Debug.Log (regionsMinMax[i, 0].Equals(regionsMinMax[i, 1]));
-			Debug.Log ("-----------------");
-			            
-		}
 
 		for (int i = 0; i < 6; i++) {
 			

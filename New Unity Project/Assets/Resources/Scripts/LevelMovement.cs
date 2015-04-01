@@ -14,6 +14,8 @@ public class LevelMovement : MonoBehaviour {
 		if (GM.gameState == GameState.Firing) {
 			moveTime = Time.time + 1;//rise for 3 secs
 			StartCoroutine(LevelRise());
+		}else if (GM.gameState == GameState.Drawing){
+			transform.rotation = Quaternion.identity;
 		}
 	}
 	

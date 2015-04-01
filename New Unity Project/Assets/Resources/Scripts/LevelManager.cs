@@ -41,6 +41,7 @@ public class LevelManager : MonoBehaviour {
 
 			Destroy (_instance.CurrentLevelGO);
 			_instance.CurrentLevelGO = Instantiate (Resources.Load ("LevelGOs/LevelPiece" + levelNum.ToString (), typeof(GameObject))) as GameObject;
+		_instance.CurrentLevelGO.transform.rotation = _instance.rotatingGOs.transform.rotation;
 			_instance.CurrentLevelGO.transform.parent = _instance.rotatingGOs.transform;
 			_instance.currentLevel = levelNum;
 			GameManager.Instance.SetGameState (GameState.Drawing);

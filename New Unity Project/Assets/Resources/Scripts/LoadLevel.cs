@@ -3,6 +3,8 @@ using System.Collections;
 
 public class LoadLevel : MonoBehaviour {
 	public int LevelToLoad;
+	public AudioSource hover;
+	public AudioSource grow;
 
 	void Start(){
 		LevelManager.Instance.OnLevelChange += HandleOnLevelChange;
@@ -20,7 +22,7 @@ public class LoadLevel : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other){
 		this.GetComponent<Animator>().SetBool ("Bounce",true);
-		if(LevelManager.Instance.currentLevel != LevelToLoad){
+		if(LevelManager.Instance.currentLevel != LevelToLoad || GameManager.Instance.gameState != GameState.Drawing){
 			
 			LevelManager.Instance.ChangeLevel (LevelToLoad);
 		}
@@ -28,6 +30,23 @@ public class LoadLevel : MonoBehaviour {
 
 	void OnTriggerExit(Collider other){
 		this.GetComponent<Animator> ().SetBool ("Bounce",false);
+	}
+
+	void PlayGrowSound(){
+		this.grow.Play();
+	}
+
+	void PlayHoverSound(){
+		if (!this.hover.isPlaying) {
+			this.hover.Play ();
+		}
+	}
+
+	void PlayShrinkSound(){
+		if (this.hover.isPlaying) {
+			this.hover.Stop();
+		}
+		this.grow.Play ();
 	}
 
 }

@@ -6,6 +6,7 @@ public class CannonFire : MonoBehaviour {
 	public float FirePower = 1.6f;
 	public float DelayInSec = 1;
 	public bool fired = false;
+	public AudioSource fire;
 
 	GameManager GM;
 
@@ -31,9 +32,12 @@ public class CannonFire : MonoBehaviour {
 
 			yield return new WaitForSeconds (DelayInSec);
 			this.rigidbody.useGravity = true;
+			this.fire.Play ();
 			this.rigidbody.AddForce (transform.forward * FirePower, ForceMode.Impulse);
 			fired = true;
 			particles.Play ();
 
 	}
+
+
 }
